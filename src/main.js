@@ -196,6 +196,25 @@ function setupServicesReveal() {
 
 setupServicesReveal();
 
+function setupExpertiseReveal() {
+  const cards = document.querySelectorAll(".expertise-grid .expertise-card");
+  if (!cards.length || reducedMotion.matches) return;
+
+  gsap.from(cards, {
+    opacity: 0,
+    y: 24,
+    duration: 0.5,
+    stagger: 0.08,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".expertise-grid",
+      start: "top 85%"
+    }
+  });
+}
+
+setupExpertiseReveal();
+
 function setupNetworkCanvas() {
   const canvas = document.getElementById("networkCanvas");
   if (!canvas) return;
