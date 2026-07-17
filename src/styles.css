@@ -521,10 +521,20 @@ h3 {
   grid-column: span 2;
 }
 
-.service-index {
-  color: var(--accent-2);
-  font-weight: 900;
-  letter-spacing: 0.12em;
+.service-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(116, 238, 185, 0.06);
+  color: var(--accent);
+}
+
+.service-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
 .service-card p,

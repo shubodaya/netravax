@@ -139,6 +139,44 @@ function setupPlatformConsole() {
 
 setupPlatformConsole();
 
+function setupCapabilityStrip() {
+  const items = document.querySelectorAll(".capability-strip > div");
+  if (!items.length || reducedMotion.matches) return;
+
+  gsap.from(items, {
+    opacity: 0,
+    y: 10,
+    duration: 0.4,
+    stagger: 0.06,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".capability-strip",
+      start: "top 90%"
+    }
+  });
+}
+
+setupCapabilityStrip();
+
+function setupServicesReveal() {
+  const cards = document.querySelectorAll(".service-grid .service-card");
+  if (!cards.length || reducedMotion.matches) return;
+
+  gsap.from(cards, {
+    opacity: 0,
+    y: 24,
+    duration: 0.5,
+    stagger: 0.08,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".service-grid",
+      start: "top 85%"
+    }
+  });
+}
+
+setupServicesReveal();
+
 function setupNetworkCanvas() {
   const canvas = document.getElementById("networkCanvas");
   if (!canvas) return;
