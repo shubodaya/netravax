@@ -5,6 +5,20 @@ gsap.registerPlugin(ScrollTrigger);
 
 const APP_URL = "https://app.netravax.shubodaya.dev/";
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+// Motion convention (see also the color/motion doc block in styles.css):
+// power2.out throughout. The hero intro is deliberately brief (150ms, tiny
+// stagger) so it never delays access to the headline or primary CTA — it's
+// a polish, not a gate. Scroll reveals use two named shapes: "panel" for a
+// single large element (no stagger needed) and "grid" for card/tile groups
+// (staggered so the set arrives together, not as individually popping
+// items). Everything here is skipped entirely under prefers-reduced-motion.
+const EASE = "power2.out";
+const HERO_INTRO = { y: 8, duration: 0.15, stagger: 0.015 };
+const REVEAL = {
+  panel: { y: 16, duration: 0.5, start: "top 88%" },
+  grid: { y: 24, duration: 0.5, stagger: 0.08, start: "top 85%" }
+};
 const header = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
@@ -46,6 +60,11 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setNavOpen(false);
 });
 
+const MOBILE_NAV_BREAKPOINT = 860;
+window.addEventListener("resize", () => {
+  if (window.innerWidth > MOBILE_NAV_BREAKPOINT) setNavOpen(false);
+});
+
 function setupReveals() {
   const nodes = document.querySelectorAll(".reveal");
   if (!nodes.length || reducedMotion.matches) return;
@@ -53,12 +72,12 @@ function setupReveals() {
   nodes.forEach((node) => {
     gsap.from(node, {
       opacity: 0,
-      y: 16,
-      duration: 0.5,
-      ease: "power2.out",
+      y: REVEAL.panel.y,
+      duration: REVEAL.panel.duration,
+      ease: EASE,
       scrollTrigger: {
         trigger: node,
-        start: "top 88%"
+        start: REVEAL.panel.start
       }
     });
   });
@@ -124,13 +143,17 @@ setupHeroParallax();
 
 function setupHeroIntro() {
   if (reducedMotion.matches) return;
-  gsap.timeline({ defaults: { ease: "power2.out" } })
-    .from(".hero .eyebrow", { opacity: 0, y: 12, duration: 0.5 })
-    .from("#hero-title", { opacity: 0, y: 18, duration: 0.6 }, "-=0.3")
-    .from(".hero-lead", { opacity: 0, y: 14, duration: 0.5 }, "-=0.35")
-    .from(".hero-actions .button", { opacity: 0, y: 10, duration: 0.4, stagger: 0.08 }, "-=0.3")
-    .from(".hero-proof > div", { opacity: 0, y: 10, duration: 0.4, stagger: 0.08 }, "-=0.25")
-    .from(".topology-node", { opacity: 0, y: 10, duration: 0.5, stagger: 0.1 }, "-=0.4");
+  // Deliberately brief: the headline (2nd target) reaches full opacity at
+  // ~165ms and the primary CTA (4th target) at ~195ms — a polish, not a
+  // sequential reveal the visitor has to wait through. Topology labels are
+  // left out entirely; they're always visible, no entrance needed.
+  gsap.from([".hero .eyebrow", "#hero-title", ".hero-lead", ".hero-actions .button", ".hero-proof > div"], {
+    opacity: 0,
+    y: HERO_INTRO.y,
+    duration: HERO_INTRO.duration,
+    stagger: HERO_INTRO.stagger,
+    ease: EASE
+  });
 }
 
 setupHeroIntro();
@@ -164,13 +187,13 @@ function setupCapabilityStrip() {
 
   gsap.from(items, {
     opacity: 0,
-    y: 10,
-    duration: 0.4,
-    stagger: 0.06,
-    ease: "power2.out",
+    y: REVEAL.grid.y,
+    duration: REVEAL.grid.duration,
+    stagger: REVEAL.grid.stagger,
+    ease: EASE,
     scrollTrigger: {
       trigger: ".capability-strip",
-      start: "top 90%"
+      start: REVEAL.grid.start
     }
   });
 }
@@ -183,13 +206,13 @@ function setupServicesReveal() {
 
   gsap.from(cards, {
     opacity: 0,
-    y: 24,
-    duration: 0.5,
-    stagger: 0.08,
-    ease: "power2.out",
+    y: REVEAL.grid.y,
+    duration: REVEAL.grid.duration,
+    stagger: REVEAL.grid.stagger,
+    ease: EASE,
     scrollTrigger: {
       trigger: ".service-grid",
-      start: "top 85%"
+      start: REVEAL.grid.start
     }
   });
 }
@@ -202,13 +225,13 @@ function setupExpertiseReveal() {
 
   gsap.from(cards, {
     opacity: 0,
-    y: 24,
-    duration: 0.5,
-    stagger: 0.08,
-    ease: "power2.out",
+    y: REVEAL.grid.y,
+    duration: REVEAL.grid.duration,
+    stagger: REVEAL.grid.stagger,
+    ease: EASE,
     scrollTrigger: {
       trigger: ".expertise-grid",
-      start: "top 85%"
+      start: REVEAL.grid.start
     }
   });
 }

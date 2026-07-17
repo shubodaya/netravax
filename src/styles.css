@@ -1,3 +1,17 @@
+/*
+  Color roles: --accent (green) is the primary brand/structural color used
+  for CTAs, borders and heading accents. --accent-3 (lime) signals
+  "live/active" state only (status dots, active tiles, progress) — not a
+  general decorative color. --danger is form errors only.
+
+  Motion: standard duration 0.4-0.5s with power2.out easing; the hero intro
+  uses a much shorter ~150ms/15ms-stagger polish so it never delays access
+  to the headline or primary CTA. Every scroll-triggered or interactive
+  animation is skipped entirely (not just shortened) under
+  prefers-reduced-motion — see the media query at the end of this file and
+  the `reducedMotion` guards in main.js.
+*/
+
 @font-face {
   font-family: "Space Grotesk";
   font-style: normal;
@@ -197,9 +211,13 @@ svg {
   font-weight: 700;
 }
 
-.site-nav a:hover {
+.site-nav a:not(.nav-action):hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.05);
+}
+
+.site-nav a:not(.nav-action):active {
+  opacity: 0.7;
 }
 
 .site-nav .nav-action {
@@ -207,11 +225,32 @@ svg {
   border: 1px solid rgba(116, 238, 185, 0.54);
   background: var(--accent);
   color: #07110f;
+  transition:
+    filter 160ms ease,
+    background 160ms ease;
 }
 
 .site-nav .nav-action--ghost {
   background: transparent;
   color: var(--accent);
+}
+
+/* Hover/active use filter and background-tint rather than re-setting
+   background, so they never compete with the base rules above. */
+.nav-action:hover {
+  filter: brightness(1.08);
+}
+
+.nav-action--ghost:hover {
+  background: rgba(116, 238, 185, 0.12);
+}
+
+.nav-action:active {
+  filter: brightness(0.92);
+}
+
+.nav-action--ghost:active {
+  background: rgba(116, 238, 185, 0.2);
 }
 
 .nav-toggle {
@@ -231,6 +270,21 @@ svg {
   height: 2px;
   margin: 3px auto;
   background: currentColor;
+  transition:
+    transform 200ms ease,
+    opacity 200ms ease;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .section-shell {
@@ -337,11 +391,24 @@ h3 {
   transition:
     transform 160ms ease,
     border-color 160ms ease,
-    background 160ms ease;
+    background 160ms ease,
+    filter 160ms ease;
 }
 
 .button:hover {
   transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+  filter: brightness(0.92);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
 }
 
 .button-primary {
@@ -941,6 +1008,10 @@ textarea[aria-invalid="true"] {
 
 .footer-grid a:hover {
   color: var(--accent);
+}
+
+.footer-grid a:active {
+  opacity: 0.7;
 }
 
 .footer-bottom {
