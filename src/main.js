@@ -116,6 +116,29 @@ function setupHeroIntro() {
 
 setupHeroIntro();
 
+function setupPlatformConsole() {
+  const consoleEl = document.querySelector(".platform-console");
+  const tiles = consoleEl ? Array.from(consoleEl.querySelectorAll(".console-grid > div")) : [];
+  if (!consoleEl || !tiles.length || reducedMotion.matches) return;
+
+  function setActive(index) {
+    tiles.forEach((tile, i) => tile.classList.toggle("is-active", i === index));
+  }
+
+  ScrollTrigger.create({
+    trigger: consoleEl,
+    start: "top 75%",
+    end: "bottom 35%",
+    scrub: true,
+    onUpdate: (self) => {
+      const stage = Math.min(tiles.length - 1, Math.floor(self.progress * tiles.length));
+      setActive(stage);
+    }
+  });
+}
+
+setupPlatformConsole();
+
 function setupNetworkCanvas() {
   const canvas = document.getElementById("networkCanvas");
   if (!canvas) return;
