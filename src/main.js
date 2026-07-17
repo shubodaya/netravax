@@ -239,6 +239,30 @@ function setupNetworkCanvas() {
 
 setupNetworkCanvas();
 
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+const turnstileSlot = document.querySelector("[data-turnstile]");
+let turnstileWidgetId = null;
+
+function setupTurnstile() {
+  if (!TURNSTILE_SITE_KEY || !turnstileSlot) return;
+  window.__netravaxTurnstileReady = () => {
+    if (!window.turnstile) return;
+    turnstileWidgetId = window.turnstile.render(turnstileSlot, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: "dark",
+      action: "contact"
+    });
+  };
+  const script = document.createElement("script");
+  script.src =
+    "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__netravaxTurnstileReady";
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
+setupTurnstile();
+
 const fields = {
   name: {
     node: document.getElementById("name"),
@@ -319,6 +343,9 @@ contactForm?.addEventListener("submit", async (event) => {
   const formData = new FormData(contactForm);
   const payload = Object.fromEntries(formData.entries());
   payload.consent = fields.consent.node.checked;
+  if (turnstileWidgetId !== null && window.turnstile) {
+    payload.turnstileToken = window.turnstile.getResponse(turnstileWidgetId) || "";
+  }
 
   try {
     const response = await fetch("/api/contact", {
@@ -341,5 +368,8 @@ contactForm?.addEventListener("submit", async (event) => {
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = "Request a consultation";
+    if (turnstileWidgetId !== null && window.turnstile) {
+      window.turnstile.reset(turnstileWidgetId);
+    }
   }
 });

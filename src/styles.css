@@ -832,6 +832,10 @@ textarea[aria-invalid="true"] {
   color: var(--danger);
 }
 
+.turnstile-slot:empty {
+  display: none;
+}
+
 .site-footer {
   border-top: 1px solid var(--line);
   background: #06100e;
