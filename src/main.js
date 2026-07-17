@@ -380,6 +380,22 @@ function setupTurnstile() {
 
 setupTurnstile();
 
+function setupContactFieldGlow() {
+  if (!contactForm || reducedMotion.matches) return;
+  const inputs = contactForm.querySelectorAll("input, select, textarea");
+
+  inputs.forEach((field) => {
+    field.addEventListener("focus", () => {
+      gsap.to(field, { "--glow-alpha": 0.3, duration: 0.3, ease: "power2.out" });
+    });
+    field.addEventListener("blur", () => {
+      gsap.to(field, { "--glow-alpha": 0, duration: 0.3, ease: "power2.out" });
+    });
+  });
+}
+
+setupContactFieldGlow();
+
 const fields = {
   name: {
     node: document.getElementById("name"),
