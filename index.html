@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Netravax Technologies | Enterprise Networking, Infrastructure and Cybersecurity</title>
+    <meta
+      name="description"
+      content="Netravax Technologies is a UK-based independent IT services and technology consultancy delivering enterprise networking, infrastructure, cybersecurity, automation and software engineering."
+    />
+    <link rel="canonical" href="https://netravax.shubodaya.dev/" />
+    <meta name="theme-color" content="#07110f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Netravax Technologies" />
+    <meta
+      property="og:description"
+      content="Enterprise networking, infrastructure, cybersecurity, automation and software engineering, supported by the Netravax network operations platform."
+    />
+    <meta property="og:url" content="https://netravax.shubodaya.dev/" />
+    <meta property="og:image" content="https://netravax.shubodaya.dev/og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Netravax Technologies" />
+    <meta
+      name="twitter:description"
+      content="Secure, reliable and maintainable digital infrastructure for networks, cloud, security and software delivery."
+    />
+    <meta name="twitter:image" content="https://netravax.shubodaya.dev/og-image.svg" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://netravax.shubodaya.dev/#organization",
+            "name": "Netravax Technologies",
+            "url": "https://netravax.shubodaya.dev/",
+            "founder": {
+              "@type": "Person",
+              "name": "Shubodaya Kumar"
+            },
+            "areaServed": "GB",
+            "description": "UK-based independent IT services and technology consultancy."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://netravax.shubodaya.dev/#website",
+            "name": "Netravax Technologies",
+            "url": "https://netravax.shubodaya.dev/",
+            "publisher": {
+              "@id": "https://netravax.shubodaya.dev/#organization"
+            }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Netravax",
+            "applicationCategory": "NetworkManagementApplication",
+            "operatingSystem": "Web, Windows desktop",
+            "url": "https://app.netravax.shubodaya.dev/",
+            "publisher": {
+              "@id": "https://netravax.shubodaya.dev/#organization"
+            }
+          },
+          {
+            "@type": "Service",
+            "name": "Enterprise networking, cybersecurity and software engineering consulting",
+            "provider": {
+              "@id": "https://netravax.shubodaya.dev/#organization"
+            },
+            "areaServed": "GB",
+            "serviceType": [
+              "Enterprise networking",
+              "Infrastructure support",
+              "Cybersecurity consulting",
+              "Automation",
+              "Web application development"
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" data-site-header>
+      <div class="header-inner">
+        <a class="brand" href="#top" aria-label="Netravax Technologies home">
+          <span class="brand-mark" aria-hidden="true">N</span>
+          <span class="brand-copy">
+            <strong>Netravax Technologies</strong>
+            <span>Network infrastructure and security</span>
+          </span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-label="Open navigation"
+          aria-controls="site-navigation"
+          aria-expanded="false"
+          data-nav-toggle
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-site-nav>
+          <a href="#services">Services</a>
+          <a href="#platform">Netravax Platform</a>
+          <a href="#expertise">Expertise</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a class="nav-action nav-action--ghost" href="https://app.netravax.shubodaya.dev/">Open Netravax</a>
+          <a class="nav-action" href="https://app.netravax.shubodaya.dev/">Sign in</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero section-shell" id="top" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Enterprise Networking | Infrastructure | Cybersecurity</p>
+            <h1 id="hero-title">Engineering secure, reliable and intelligent digital infrastructure.</h1>
+            <p class="hero-lead">
+              Netravax Technologies delivers enterprise networking, infrastructure, cybersecurity, automation and software
+              solutions, supported by our integrated network operations platform.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#services">Explore our services</a>
+              <a class="button button-secondary" href="https://app.netravax.shubodaya.dev/">Open Netravax</a>
+            </div>
+            <dl class="hero-proof" aria-label="Core capability statements">
+              <div>
+                <dt>Independent</dt>
+                <dd>UK-based consultancy</dd>
+              </div>
+              <div>
+                <dt>Operational</dt>
+                <dd>Network, firewall and VPN workflows</dd>
+              </div>
+              <div>
+                <dt>Practical</dt>
+                <dd>Automation and full-stack delivery</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="hero-visual" aria-label="Animated network topology visual">
+            <canvas id="networkCanvas" width="1120" height="760" aria-hidden="true"></canvas>
+            <div class="topology-overlay" data-depth="0.18">
+              <div class="topology-node topology-node--core">
+                <span>Core</span>
+                <strong>Routing and switching</strong>
+              </div>
+              <div class="topology-node topology-node--edge">
+                <span>Edge</span>
+                <strong>Firewall and VPN</strong>
+              </div>
+              <div class="topology-node topology-node--cloud">
+                <span>Cloud</span>
+                <strong>Automation and APIs</strong>
+              </div>
+              <div class="topology-node topology-node--ops">
+                <span>Ops</span>
+                <strong>Monitoring and RCA</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="capability-strip" aria-label="Netravax capabilities">
+        <div>Enterprise Networking</div>
+        <div>Infrastructure Support</div>
+        <div>Cybersecurity</div>
+        <div>Automation</div>
+        <div>Web Engineering</div>
+        <div>UK-based, remote-capable</div>
+      </section>
+
+      <section class="services section-shell" id="services" aria-labelledby="services-title">
+        <div class="section-heading">
+          <p class="eyebrow">Services</p>
+          <h2 id="services-title">Technical delivery for networks, security and software systems.</h2>
+          <p>
+            Services are shaped around stable operations, clear implementation plans and maintainable handover, not
+            isolated technology tasks.
+          </p>
+        </div>
+        <div class="service-grid">
+          <article class="service-card reveal">
+            <span class="service-index">01</span>
+            <h3>Network and Infrastructure</h3>
+            <p>
+              Design, deployment and troubleshooting for routing, switching, WAN, VLAN, DNS, DHCP, VPN, firewall and
+              infrastructure support.
+            </p>
+            <strong>Outcome: predictable connectivity and infrastructure that can be operated with confidence.</strong>
+          </article>
+          <article class="service-card reveal">
+            <span class="service-index">02</span>
+            <h3>Cybersecurity</h3>
+            <p>
+              Security assessments, authorised penetration testing, vulnerability analysis, firewall hardening and
+              secure architecture guidance.
+            </p>
+            <strong>Outcome: clear risk visibility and practical hardening steps for real environments.</strong>
+          </article>
+          <article class="service-card reveal">
+            <span class="service-index">03</span>
+            <h3>Cloud and Automation</h3>
+            <p>
+              Cloud networking, infrastructure automation, Terraform, Ansible, Python and workflow improvement for
+              repeatable operations.
+            </p>
+            <strong>Outcome: less manual drift, faster delivery and stronger operational consistency.</strong>
+          </article>
+          <article class="service-card reveal">
+            <span class="service-index">04</span>
+            <h3>Web and Software Engineering</h3>
+            <p>
+              Secure websites, web applications, APIs, internal platforms and full-stack development using modern,
+              maintainable patterns.
+            </p>
+            <strong>Outcome: software that supports operational work without adding avoidable complexity.</strong>
+          </article>
+          <article class="service-card reveal service-card--wide">
+            <span class="service-index">05</span>
+            <h3>Technical Support and Consulting</h3>
+            <p>
+              NOC support, incident investigation, troubleshooting, documentation, implementation assistance and
+              technical advisory services.
+            </p>
+            <strong>Outcome: focused expertise for issues that need calm analysis and careful execution.</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="platform section-shell" id="platform" aria-labelledby="platform-title">
+        <div class="platform-layout">
+          <div class="section-heading">
+            <p class="eyebrow">Netravax Platform</p>
+            <h2 id="platform-title">An operations product developed by Netravax Technologies.</h2>
+            <p>
+              Netravax brings network diagnostics, operational workflows, firewall and VPN analysis, packet review,
+              reporting and collaboration into one browser-first workspace with optional desktop packaging.
+            </p>
+            <div class="section-actions">
+              <a class="button button-primary" href="https://app.netravax.shubodaya.dev/">Launch platform</a>
+              <a class="button button-secondary" href="#platform-capabilities">View capabilities</a>
+            </div>
+          </div>
+          <div class="platform-console reveal" aria-label="Netravax capability preview">
+            <div class="console-topbar">
+              <span></span>
+              <span></span>
+              <span></span>
+              <strong>Operations workspace</strong>
+            </div>
+            <div class="console-grid">
+              <div>
+                <small>Active workflow</small>
+                <strong>VPN Scope</strong>
+                <span>IPsec, SSL VPN, NAT-T, tunnel flaps and certificate evidence.</span>
+              </div>
+              <div>
+                <small>Evidence</small>
+                <strong>Session-based</strong>
+                <span>Reports, captures, generated plans and activity history.</span>
+              </div>
+              <div>
+                <small>Collaboration</small>
+                <strong>Neon Link</strong>
+                <span>Handles, invitations, chat and call workflows for signed-in users.</span>
+              </div>
+              <div>
+                <small>Analysis</small>
+                <strong>Packet Pilot</strong>
+                <span>Protocol breakdown, flows, top talkers and troubleshooting findings.</span>
+              </div>
+            </div>
+            <div class="console-paths" aria-hidden="true">
+              <span style="--delay: 0s"></span>
+              <span style="--delay: 0.65s"></span>
+              <span style="--delay: 1.25s"></span>
+            </div>
+          </div>
+        </div>
+        <div class="platform-capabilities" id="platform-capabilities">
+          <article>Network diagnostics</article>
+          <article>Network Operations Suite</article>
+          <article>Packet and log analysis</article>
+          <article>Firewall and VPN workflows</article>
+          <article>Monitoring and outage visibility</article>
+          <article>Session-based investigations</article>
+          <article>Reports and evidence</article>
+          <article>Neon Link collaboration</article>
+        </div>
+      </section>
+
+      <section class="workflow section-shell" id="workflow" aria-labelledby="workflow-title">
+        <div class="workflow-grid">
+          <div class="workflow-copy">
+            <p class="eyebrow">How we work</p>
+            <h2 id="workflow-title">A delivery process built around operational clarity.</h2>
+            <p>
+              Every engagement starts with the environment and risk context, then moves through design, implementation
+              and support with documentation that can be used after handover.
+            </p>
+          </div>
+          <div class="workflow-steps" data-workflow>
+            <article class="workflow-step active" data-stage="discover">
+              <span>01</span>
+              <h3>Discover</h3>
+              <p>Assess the environment, requirements and risks.</p>
+            </article>
+            <article class="workflow-step" data-stage="design">
+              <span>02</span>
+              <h3>Design</h3>
+              <p>Define secure, maintainable architecture and implementation plans.</p>
+            </article>
+            <article class="workflow-step" data-stage="deliver">
+              <span>03</span>
+              <h3>Deliver</h3>
+              <p>Implement, test, document and hand over the solution.</p>
+            </article>
+            <article class="workflow-step" data-stage="support">
+              <span>04</span>
+              <h3>Support</h3>
+              <p>Troubleshoot, monitor, improve and provide ongoing technical assistance.</p>
+            </article>
+          </div>
+          <div class="workflow-visual" aria-hidden="true">
+            <div class="workflow-ring"></div>
+            <div class="workflow-stage" data-workflow-stage>DISCOVER</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="expertise section-shell" id="expertise" aria-labelledby="expertise-title">
+        <div class="section-heading">
+          <p class="eyebrow">Expertise</p>
+          <h2 id="expertise-title">Technology familiarity across infrastructure, security and development.</h2>
+          <p>
+            Vendor and platform names describe practical experience and do not imply official partnership or
+            accreditation.
+          </p>
+        </div>
+        <div class="expertise-grid">
+          <article class="expertise-card reveal">
+            <h3>Networking</h3>
+            <p>Cisco, SonicWall, Palo Alto, Fortinet, Check Point, routing, switching, VPN and SD-WAN.</p>
+          </article>
+          <article class="expertise-card reveal">
+            <h3>Cloud and Infrastructure</h3>
+            <p>Microsoft Azure, AWS, Linux, Windows Server and VMware.</p>
+          </article>
+          <article class="expertise-card reveal">
+            <h3>Development and Automation</h3>
+            <p>Python, FastAPI, React, TypeScript, PowerShell, Bash, Ansible and Terraform.</p>
+          </article>
+          <article class="expertise-card reveal">
+            <h3>Observability and Troubleshooting</h3>
+            <p>Wireshark, Splunk, PRTG, packet capture, log analysis and RCA.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about section-shell" id="about" aria-labelledby="about-title">
+        <div class="about-panel">
+          <div>
+            <p class="eyebrow">About</p>
+            <h2 id="about-title">Netravax Technologies is an independent UK-based technology consultancy.</h2>
+          </div>
+          <div class="about-copy">
+            <p>
+              Founded by Shubodaya Kumar, Netravax Technologies focuses on practical engineering support for enterprise
+              network and security environments, infrastructure deployments, technical operations and software
+              development.
+            </p>
+            <p>
+              The work is intentionally direct: understand the environment, reduce operational risk, implement carefully
+              and leave behind systems that can be maintained.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact section-shell" id="contact" aria-labelledby="contact-title">
+        <div class="contact-layout">
+          <div class="section-heading">
+            <p class="eyebrow">Contact</p>
+            <h2 id="contact-title">Discuss your requirements.</h2>
+            <p>
+              Use the enquiry form for networking, infrastructure, cybersecurity, automation, platform or web
+              engineering work. Do not include passwords, private keys or sensitive production data.
+            </p>
+          </div>
+          <form class="contact-form" id="contactForm" novalidate>
+            <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <input type="hidden" name="startedAt" id="startedAt" />
+            <div class="form-grid">
+              <label>
+                <span>Name</span>
+                <input id="name" name="name" type="text" autocomplete="name" required />
+                <small class="field-error" id="nameError"></small>
+              </label>
+              <label>
+                <span>Work email</span>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+                <small class="field-error" id="emailError"></small>
+              </label>
+            </div>
+            <label>
+              <span>Company</span>
+              <input id="company" name="company" type="text" autocomplete="organization" />
+              <small class="field-error" id="companyError"></small>
+            </label>
+            <label>
+              <span>Service needed</span>
+              <select id="service" name="service" required>
+                <option value="">Select a service</option>
+                <option>Network and infrastructure</option>
+                <option>Cybersecurity</option>
+                <option>Cloud and automation</option>
+                <option>Web and software engineering</option>
+                <option>Technical support and consulting</option>
+                <option>Netravax platform</option>
+              </select>
+              <small class="field-error" id="serviceError"></small>
+            </label>
+            <label>
+              <span>Project summary</span>
+              <textarea id="summary" name="summary" rows="6" required></textarea>
+              <small class="field-error" id="summaryError"></small>
+            </label>
+            <label>
+              <span>Preferred contact method</span>
+              <select id="contactMethod" name="contactMethod" required>
+                <option value="">Select a method</option>
+                <option>Email</option>
+                <option>Video call</option>
+                <option>Phone call</option>
+              </select>
+              <small class="field-error" id="contactMethodError"></small>
+            </label>
+            <label class="consent">
+              <input id="consent" name="consent" type="checkbox" required />
+              <span>I consent to Netravax Technologies using this information to respond to my enquiry.</span>
+            </label>
+            <small class="field-error" id="consentError"></small>
+            <button class="button button-primary" type="submit">Request a consultation</button>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand brand-footer" href="#top" aria-label="Netravax Technologies home">
+            <span class="brand-mark" aria-hidden="true">N</span>
+            <span class="brand-copy">
+              <strong>Netravax Technologies</strong>
+              <span>Enterprise network engineering</span>
+            </span>
+          </a>
+          <p>Independent UK-based IT services and technology consultancy.</p>
+        </div>
+        <nav aria-label="Footer services">
+          <h2>Services</h2>
+          <a href="#services">Network and infrastructure</a>
+          <a href="#services">Cybersecurity</a>
+          <a href="#services">Automation</a>
+          <a href="#services">Software engineering</a>
+        </nav>
+        <nav aria-label="Footer platform">
+          <h2>Netravax Platform</h2>
+          <a href="https://app.netravax.shubodaya.dev/">Launch platform</a>
+          <a href="https://app.netravax.shubodaya.dev/">Sign in</a>
+          <a href="#platform">Capabilities</a>
+        </nav>
+        <nav aria-label="Footer company">
+          <h2>Company</h2>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="/security.html">Security</a>
+          <a href="#contact">Contact</a>
+          <a href="https://www.linkedin.com/" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/shubodaya/net-kit" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Netravax Technologies. All rights reserved.</span>
+        <span>Do not submit credentials, private keys or sensitive production data through public forms.</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

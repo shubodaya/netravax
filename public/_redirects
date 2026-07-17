@@ -1,0 +1,5 @@
+/app https://app.netravax.shubodaya.dev/ 302
+/app/* https://app.netravax.shubodaya.dev/:splat 302
+/login https://app.netravax.shubodaya.dev/ 302
+/register https://app.netravax.shubodaya.dev/ 302
+/forgot-password https://app.netravax.shubodaya.dev/ 302
