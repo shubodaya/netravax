@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-700.woff2") format("woff2");
+}
+
 :root {
   color-scheme: dark;
   --bg: #07110f;
@@ -16,6 +24,8 @@
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
   --max: 1180px;
   --header: 76px;
+  --font-display: "Space Grotesk", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -150,8 +160,11 @@ svg {
     linear-gradient(135deg, rgba(116, 238, 185, 0.2), rgba(139, 188, 255, 0.08)),
     #091512;
   color: var(--accent);
-  font-weight: 900;
-  letter-spacing: 0;
+}
+
+.brand-mark svg {
+  width: 24px;
+  height: 24px;
 }
 
 .brand-copy {
@@ -160,6 +173,7 @@ svg {
 }
 
 .brand-copy strong {
+  font-family: var(--font-display);
   font-size: 0.96rem;
   letter-spacing: 0;
 }
@@ -243,9 +257,10 @@ svg {
 .eyebrow {
   margin: 0 0 14px;
   color: var(--accent);
+  font-family: var(--font-display);
   font-size: 0.77rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -259,6 +274,7 @@ h3 {
   overflow-wrap: normal;
   text-wrap: balance;
   word-break: normal;
+  font-family: var(--font-display);
 }
 
 h1 {
@@ -266,14 +282,14 @@ h1 {
   margin: 0;
   font-size: clamp(2.55rem, 5.2vw, 5rem);
   line-height: 0.98;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 h2 {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3.8rem);
   line-height: 1.02;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 h3 {
@@ -894,10 +910,6 @@ textarea[aria-invalid="true"] {
   transform: none;
 }
 
-.reveal.is-visible {
-  animation: revealRise 520ms ease both;
-}
-
 .policy-page {
   background: var(--bg);
 }
@@ -935,18 +947,6 @@ textarea[aria-invalid="true"] {
   55%,
   100% {
     transform: translateX(320%);
-  }
-}
-
-@keyframes revealRise {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

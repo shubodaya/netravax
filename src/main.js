@@ -1,3 +1,8 @@
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const APP_URL = "https://app.netravax.shubodaya.dev/";
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const header = document.querySelector("[data-site-header]");
@@ -41,19 +46,27 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setNavOpen(false);
 });
 
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
+function setupReveals() {
+  const nodes = document.querySelectorAll(".reveal");
+  if (!nodes.length || reducedMotion.matches) return;
+
+  nodes.forEach((node) => {
+    gsap.from(node, {
+      opacity: 0,
+      y: 16,
+      duration: 0.5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: node,
+        start: "top 88%"
       }
     });
-  },
-  { threshold: 0.16 }
-);
+  });
 
-document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+}
+
+setupReveals();
 
 function setupWorkflow() {
   const steps = Array.from(document.querySelectorAll(".workflow-step"));

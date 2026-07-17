@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Netravax Technologies">
   <rect width="64" height="64" rx="12" fill="#07110f"/>
-  <path d="M14 46V18h7l22 23V18h7v28h-7L21 23v23z" fill="#74eeb9"/>
-  <path d="M16 48 48 16" stroke="#dbff8e" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+  <rect x="14" y="18" width="7" height="28" rx="1.5" fill="#74eeb9"/>
+  <rect x="43" y="18" width="7" height="28" rx="1.5" fill="#74eeb9"/>
+  <path d="M23 21 32 32 41 43" fill="none" stroke="#74eeb9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="23" cy="21" r="2.6" fill="#dbff8e"/>
+  <circle cx="32" cy="32" r="3" fill="#dbff8e"/>
+  <circle cx="41" cy="43" r="2.6" fill="#dbff8e"/>
 </svg>

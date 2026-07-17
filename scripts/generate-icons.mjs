@@ -3,19 +3,36 @@
 // Playwright chromium that already ships as a devDependency, so there is no
 // extra runtime dependency. Re-run with: npm run generate:icons
 import { chromium } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(here, "..", "public");
 
-// The Netravax "N" mark (viewBox 0 0 64 64), identical to public/favicon.svg.
+// The Netravax "Topology N" mark (viewBox 0 0 64 64), identical to public/favicon.svg:
+// two solid bars for legibility, plus a routed diagonal trace through a midpoint node,
+// echoing the node-and-link visual language used in the hero.
 const nMark = `
-  <path d="M14 46V18h7l22 23V18h7v28h-7L21 23v23z" fill="#74eeb9" />
-  <path d="M16 48 48 16" stroke="#dbff8e" stroke-width="3" stroke-linecap="round" opacity=".72" />
+  <rect x="14" y="18" width="7" height="28" rx="1.5" fill="#74eeb9" />
+  <rect x="43" y="18" width="7" height="28" rx="1.5" fill="#74eeb9" />
+  <path d="M23 21 32 32 41 43" fill="none" stroke="#74eeb9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="23" cy="21" r="2.6" fill="#dbff8e" />
+  <circle cx="32" cy="32" r="3" fill="#dbff8e" />
+  <circle cx="41" cy="43" r="2.6" fill="#dbff8e" />
 `;
 
 const fontStack = 'Inter, ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif';
+const displayFontStack = `"Space Grotesk", ${fontStack}`;
+const spaceGroteskBase64 = readFileSync(resolve(publicDir, "fonts", "space-grotesk-700.woff2")).toString("base64");
+const displayFontFace = `
+  @font-face {
+    font-family: "Space Grotesk";
+    font-weight: 700;
+    font-style: normal;
+    src: url(data:font/woff2;base64,${spaceGroteskBase64}) format("woff2");
+  }
+`;
 
 function iconHtml(size) {
   const pad = Math.round(size * 0.12);
@@ -34,6 +51,7 @@ function iconHtml(size) {
 }
 
 const ogHtml = `<!doctype html><html><head><meta charset="utf-8" /><style>
+  ${displayFontFace}
   html, body { margin: 0; padding: 0; }
   .og {
     position: relative; width: 1200px; height: 630px; overflow: hidden;
@@ -62,16 +80,19 @@ const ogHtml = `<!doctype html><html><head><meta charset="utf-8" /><style>
     background: linear-gradient(135deg, rgba(116, 238, 185, 0.2), rgba(139, 188, 255, 0.08)), #091512;
   }
   .brand .mark svg { width: 40px; height: 40px; }
-  .brand strong { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+  .brand strong { font-family: ${displayFontStack}; font-size: 30px; font-weight: 700; letter-spacing: -0.01em; }
   .eyebrow {
-    margin-top: 70px; color: #74eeb9; font-size: 21px; font-weight: 800;
+    margin-top: 70px; color: #74eeb9; font-family: ${displayFontStack}; font-size: 21px; font-weight: 700;
     letter-spacing: 0.16em; text-transform: uppercase;
   }
-  h1 { margin: 20px 0 0; max-width: 720px; font-size: 60px; line-height: 1.04; font-weight: 800; letter-spacing: -0.02em; }
+  h1 {
+    margin: 20px 0 0; max-width: 720px; font-family: ${displayFontStack}; font-size: 60px; line-height: 1.04;
+    font-weight: 700; letter-spacing: -0.02em;
+  }
   .sub { margin-top: 24px; max-width: 640px; color: #a9c6bd; font-size: 24px; line-height: 1.4; }
   .foot { position: absolute; left: 80px; bottom: 60px; display: flex; align-items: center; gap: 14px; }
   .foot .dot { width: 10px; height: 10px; border-radius: 50%; background: #dbff8e; }
-  .foot span { color: #74eeb9; font-size: 24px; font-weight: 700; letter-spacing: 0.01em; }
+  .foot span { color: #74eeb9; font-family: ${displayFontStack}; font-size: 24px; font-weight: 700; letter-spacing: 0.01em; }
 </style></head><body>
   <div class="og">
     <div class="grid"></div>
