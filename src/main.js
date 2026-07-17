@@ -90,6 +90,25 @@ function setupWorkflow() {
 
 setupWorkflow();
 
+function setupWorkflowProgress() {
+  const stepsEl = document.querySelector(".workflow-steps");
+  const ringProgress = document.querySelector("[data-workflow-progress]");
+  if (!stepsEl || !ringProgress || reducedMotion.matches) return;
+
+  gsap.to(ringProgress, {
+    strokeDashoffset: 0,
+    ease: "none",
+    scrollTrigger: {
+      trigger: stepsEl,
+      start: "top 75%",
+      end: "bottom 25%",
+      scrub: true
+    }
+  });
+}
+
+setupWorkflowProgress();
+
 function setupHeroParallax() {
   const hero = document.querySelector(".hero");
   const overlay = document.querySelector(".topology-overlay");

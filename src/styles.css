@@ -756,6 +756,13 @@ h3 {
   border-color: rgba(219, 255, 142, 0.26);
 }
 
+.workflow-progress-ring {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  filter: drop-shadow(0 0 6px rgba(116, 238, 185, 0.45));
+}
+
 .workflow-stage {
   position: relative;
   z-index: 1;
