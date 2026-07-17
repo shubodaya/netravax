@@ -254,6 +254,10 @@ svg {
   align-items: center;
 }
 
+.text-accent {
+  color: var(--accent-3);
+}
+
 .eyebrow {
   margin: 0 0 14px;
   color: var(--accent);
@@ -364,8 +368,20 @@ h3 {
 }
 
 .hero-proof dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--text);
   font-weight: 850;
+}
+
+.hero-proof dt::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-3);
+  box-shadow: 0 0 8px rgba(219, 255, 142, 0.7);
 }
 
 .hero-proof dd {
@@ -398,7 +414,6 @@ h3 {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  transition: transform 120ms linear;
 }
 
 .topology-node {

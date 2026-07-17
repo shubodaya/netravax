@@ -90,69 +90,69 @@ function setupWorkflow() {
 
 setupWorkflow();
 
-function setupParallax() {
-  const nodes = Array.from(document.querySelectorAll("[data-depth]"));
-  if (!nodes.length || reducedMotion.matches) return;
-  let ticking = false;
+function setupHeroParallax() {
+  const hero = document.querySelector(".hero");
+  const overlay = document.querySelector(".topology-overlay");
+  const canvas = document.getElementById("networkCanvas");
+  if (!hero || reducedMotion.matches) return;
 
-  function update() {
-    ticking = false;
-    const viewport = window.innerHeight || 1;
-    nodes.forEach((node) => {
-      const depth = Number(node.dataset.depth || 0);
-      const rect = node.getBoundingClientRect();
-      const offset = (rect.top - viewport / 2) * depth;
-      node.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-    });
-  }
-
-  function requestUpdate() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  }
-
-  update();
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate);
+  const scrollTrigger = { trigger: hero, start: "top top", end: "bottom top", scrub: true };
+  if (canvas) gsap.to(canvas, { yPercent: 5, ease: "none", scrollTrigger });
+  if (overlay) gsap.to(overlay, { yPercent: 10, ease: "none", scrollTrigger });
 }
 
-setupParallax();
+setupHeroParallax();
+
+function setupHeroIntro() {
+  if (reducedMotion.matches) return;
+  gsap.timeline({ defaults: { ease: "power2.out" } })
+    .from(".hero .eyebrow", { opacity: 0, y: 12, duration: 0.5 })
+    .from("#hero-title", { opacity: 0, y: 18, duration: 0.6 }, "-=0.3")
+    .from(".hero-lead", { opacity: 0, y: 14, duration: 0.5 }, "-=0.35")
+    .from(".hero-actions .button", { opacity: 0, y: 10, duration: 0.4, stagger: 0.08 }, "-=0.3")
+    .from(".hero-proof > div", { opacity: 0, y: 10, duration: 0.4, stagger: 0.08 }, "-=0.25")
+    .from(".topology-node", { opacity: 0, y: 10, duration: 0.5, stagger: 0.1 }, "-=0.4");
+}
+
+setupHeroIntro();
 
 function setupNetworkCanvas() {
   const canvas = document.getElementById("networkCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
+  // Four hub nodes correspond to the labeled Core/Edge/Cloud/Ops overlay
+  // cards (roughly matching their on-screen quadrant); satellites are
+  // unlabeled texture representing the endpoints each tier connects.
   const nodes = [
-    { x: 0.16, y: 0.22, r: 4.5, role: "edge" },
-    { x: 0.31, y: 0.34, r: 3.4, role: "distribution" },
-    { x: 0.47, y: 0.24, r: 5.4, role: "core" },
-    { x: 0.64, y: 0.38, r: 3.8, role: "cloud" },
-    { x: 0.79, y: 0.26, r: 4.4, role: "security" },
-    { x: 0.22, y: 0.68, r: 3.8, role: "access" },
-    { x: 0.41, y: 0.57, r: 4.2, role: "ops" },
-    { x: 0.59, y: 0.71, r: 3.6, role: "monitoring" },
-    { x: 0.84, y: 0.64, r: 3.9, role: "remote" },
-    { x: 0.11, y: 0.49, r: 3.1, role: "branch" },
-    { x: 0.71, y: 0.53, r: 3.2, role: "api" }
+    { x: 0.4, y: 0.29, r: 5.6, hub: true }, // 0 core
+    { x: 0.74, y: 0.23, r: 5, hub: true }, // 1 edge
+    { x: 0.68, y: 0.75, r: 5, hub: true }, // 2 cloud
+    { x: 0.2, y: 0.71, r: 5, hub: true }, // 3 ops
+    { x: 0.13, y: 0.18, r: 3.2 }, // 4 remote site
+    { x: 0.09, y: 0.46, r: 3 }, // 5 branch link
+    { x: 0.9, y: 0.14, r: 3.1 }, // 6 cloud api
+    { x: 0.92, y: 0.5, r: 3.2 }, // 7 cloud region
+    { x: 0.5, y: 0.85, r: 3 }, // 8 monitoring feed
+    { x: 0.52, y: 0.47, r: 3.4 } // 9 exchange relay
   ];
   const links = [
     [0, 1],
-    [1, 2],
-    [2, 3],
-    [3, 4],
-    [1, 6],
-    [6, 7],
-    [7, 8],
-    [2, 6],
-    [3, 10],
-    [10, 8],
-    [0, 9],
-    [9, 5],
-    [5, 6],
-    [4, 8],
-    [2, 4]
+    [0, 2],
+    [0, 3],
+    [4, 1],
+    [4, 0],
+    [5, 3],
+    [5, 0],
+    [6, 1],
+    [7, 2],
+    [7, 1],
+    [8, 3],
+    [8, 2],
+    [9, 0],
+    [9, 2],
+    [9, 3]
   ];
+  const PRIMARY_LINK_COUNT = 3;
   const pulses = links.map((link, index) => ({
     link,
     t: (index * 0.137) % 1,
@@ -188,11 +188,16 @@ function setupNetworkCanvas() {
       const y1 = from.y * height;
       const x2 = to.x * width;
       const y2 = to.y * height;
+      const isPrimary = index < PRIMARY_LINK_COUNT;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
-      ctx.strokeStyle = index % 3 === 0 ? "rgba(116, 238, 185, 0.42)" : "rgba(111, 178, 255, 0.28)";
-      ctx.lineWidth = index % 3 === 0 ? 1.4 : 1;
+      ctx.strokeStyle = isPrimary
+        ? "rgba(219, 255, 142, 0.5)"
+        : index % 2 === 0
+          ? "rgba(116, 238, 185, 0.34)"
+          : "rgba(111, 178, 255, 0.24)";
+      ctx.lineWidth = isPrimary ? 1.8 : 1;
       ctx.stroke();
     });
 
@@ -216,12 +221,12 @@ function setupNetworkCanvas() {
       const x = node.x * width;
       const y = node.y * height;
       ctx.beginPath();
-      ctx.arc(x, y, node.r + 10, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(88, 219, 166, 0.07)";
+      ctx.arc(x, y, node.r + (node.hub ? 13 : 8), 0, Math.PI * 2);
+      ctx.fillStyle = node.hub ? "rgba(219, 255, 142, 0.1)" : "rgba(88, 219, 166, 0.07)";
       ctx.fill();
       ctx.beginPath();
       ctx.arc(x, y, node.r, 0, Math.PI * 2);
-      ctx.fillStyle = node.role === "security" ? "#dbff8e" : "#7af0c0";
+      ctx.fillStyle = node.hub ? "#dbff8e" : "#7af0c0";
       ctx.fill();
       ctx.strokeStyle = "rgba(255, 255, 255, 0.32)";
       ctx.lineWidth = 1;
