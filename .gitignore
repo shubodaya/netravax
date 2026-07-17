@@ -7,3 +7,6 @@ test-results/
 !.env.example
 .DS_Store
 Thumbs.db
+
+# Local Claude Code tooling (MCP config, cloned skills) — not part of the site
+.claude/
