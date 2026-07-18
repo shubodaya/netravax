@@ -1,7 +1,9 @@
-// Generates the raster brand assets (OG image + favicon/PWA icons) from the
-// same "N" mark and network motif used across the site. Rendered with the
-// Playwright chromium that already ships as a devDependency, so there is no
-// extra runtime dependency. Re-run with: npm run generate:icons
+// Generates the OG share image, embedding the real Netravax logo (copied directly
+// from the Netravax platform's own favicon assets — see public/android-chrome-*.png,
+// public/favicon*.png/ico and public/apple-touch-icon.png, which are literal copies,
+// not generated). Rendered with the Playwright chromium that already ships as a
+// devDependency, so there is no extra runtime dependency. Re-run with:
+// npm run generate:icons
 import { chromium } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -10,28 +12,8 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(here, "..", "public");
 
-// The Netravax "N" mark (viewBox 0 0 64 64), identical to public/favicon.svg: a
-// gradient recreation of the Netravax platform's own glowing neon-N glyph, kept as
-// solid bars (rather than the segmented/gapped neon-tube detail used at larger
-// on-page sizes) for legibility at favicon/PWA-icon scale.
-const nMark = `
-  <defs>
-    <linearGradient id="nGrad" x1="14" y1="14" x2="50" y2="50" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#effff4" />
-      <stop offset=".35" stop-color="#b4ffd2" />
-      <stop offset=".7" stop-color="#74eeb9" />
-      <stop offset="1" stop-color="#14c35b" />
-    </linearGradient>
-  </defs>
-  <g fill="none" stroke="url(#nGrad)" stroke-width="7" stroke-linecap="round">
-    <path d="M17.5 18 17.5 46" />
-    <path d="M46.5 18 46.5 46" />
-  </g>
-  <path d="M23 21 32 32 41 43" fill="none" stroke="url(#nGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <circle cx="23" cy="21" r="2.6" fill="#dbff8e" />
-  <circle cx="32" cy="32" r="3" fill="#dbff8e" />
-  <circle cx="41" cy="43" r="2.6" fill="#dbff8e" />
-`;
+const logoBase64 = readFileSync(resolve(publicDir, "android-chrome-512x512.png")).toString("base64");
+const logoDataUri = `data:image/png;base64,${logoBase64}`;
 
 const fontStack = 'Inter, ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif';
 const displayFontStack = `"Space Grotesk", ${fontStack}`;
@@ -44,22 +26,6 @@ const displayFontFace = `
     src: url(data:font/woff2;base64,${spaceGroteskBase64}) format("woff2");
   }
 `;
-
-function iconHtml(size) {
-  const pad = Math.round(size * 0.12);
-  const inner = size - pad * 2;
-  return `<!doctype html><html><head><meta charset="utf-8" /><style>
-    html, body { margin: 0; padding: 0; }
-    .wrap {
-      width: ${size}px; height: ${size}px; display: grid; place-items: center;
-      background: linear-gradient(135deg, rgba(116, 238, 185, 0.22), rgba(139, 188, 255, 0.08)), #091512;
-    }
-    svg { width: ${inner}px; height: ${inner}px; display: block;
-      filter: drop-shadow(0 0 ${Math.round(size * 0.03)}px rgba(116, 238, 185, 0.35)); }
-  </style></head><body>
-    <div class="wrap"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${nMark}</svg></div>
-  </body></html>`;
-}
 
 const ogHtml = `<!doctype html><html><head><meta charset="utf-8" /><style>
   ${displayFontFace}
@@ -86,11 +52,10 @@ const ogHtml = `<!doctype html><html><head><meta charset="utf-8" /><style>
   .content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
   .brand { display: flex; align-items: center; gap: 16px; }
   .brand .mark {
-    width: 56px; height: 56px; border-radius: 10px; display: grid; place-items: center;
+    width: 56px; height: 56px; border-radius: 10px; overflow: hidden;
     border: 1px solid rgba(116, 238, 185, 0.42);
-    background: linear-gradient(135deg, rgba(116, 238, 185, 0.2), rgba(139, 188, 255, 0.08)), #091512;
   }
-  .brand .mark svg { width: 40px; height: 40px; }
+  .brand .mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .brand strong { font-family: ${displayFontStack}; font-size: 30px; font-weight: 700; letter-spacing: -0.01em; }
   .eyebrow {
     margin-top: 70px; color: #74eeb9; font-family: ${displayFontStack}; font-size: 21px; font-weight: 700;
@@ -123,7 +88,7 @@ const ogHtml = `<!doctype html><html><head><meta charset="utf-8" /><style>
     </svg>
     <div class="content">
       <div class="brand">
-        <span class="mark"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${nMark}</svg></span>
+        <span class="mark"><img src="${logoDataUri}" alt="" /></span>
         <strong>Netravax Technologies</strong>
       </div>
       <p class="eyebrow">Networking · Infrastructure · Cybersecurity</p>
@@ -144,7 +109,4 @@ async function shoot(page, html, width, height, out) {
 const browser = await chromium.launch();
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 await shoot(page, ogHtml, 1200, 630, "og-image.png");
-await shoot(page, iconHtml(512), 512, 512, "icon-512.png");
-await shoot(page, iconHtml(192), 192, 192, "icon-192.png");
-await shoot(page, iconHtml(180), 180, 180, "apple-touch-icon.png");
 await browser.close();

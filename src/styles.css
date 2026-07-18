@@ -164,21 +164,20 @@ svg {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 42px;
   height: 42px;
   border: 1px solid rgba(116, 238, 185, 0.42);
   border-radius: 8px;
-  background:
-    linear-gradient(135deg, rgba(116, 238, 185, 0.2), rgba(139, 188, 255, 0.08)),
-    #091512;
+  overflow: hidden;
   color: var(--accent);
 }
 
-.brand-mark svg {
-  width: 24px;
-  height: 24px;
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand-copy {
@@ -869,7 +868,9 @@ h3 {
   bottom: -12px;
   width: clamp(140px, 18vw, 200px);
   height: auto;
-  opacity: 0.55;
+  border-radius: 12px;
+  opacity: 0.85;
+  mix-blend-mode: screen;
   pointer-events: none;
 }
 
@@ -883,8 +884,10 @@ h3 {
   right: 28px;
   transform: translateY(-50%);
   z-index: 30;
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 320ms ease;
@@ -894,11 +897,20 @@ h3 {
   opacity: 1;
 }
 
-.scroll-progress-mark svg {
-  display: block;
+.scroll-progress-ring {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 0 8px rgba(116, 238, 185, 0.35));
+  filter: drop-shadow(0 0 6px rgba(116, 238, 185, 0.4));
+}
+
+.scroll-progress-logo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .about-copy p:first-child {

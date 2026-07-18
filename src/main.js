@@ -178,76 +178,67 @@ function setupHeroIntro() {
 
 setupHeroIntro();
 
-// A brief one-time stroke-draw on the header brand mark only (footer/policy-page
-// instances stay static — they're either off-screen at load or on pages that don't
-// carry this launch moment). Kept short so it reads as chrome polish, not a gate on
-// anything the visitor is waiting for.
+// A brief one-time "power on" flicker on the header brand mark only
+// (footer/policy-page instances stay static — they're either off-screen at load or
+// on pages that don't carry this launch moment). The real Netravax mark is itself a
+// glowing LED/segment-display glyph, so a quick dim-to-bright flicker reads as the
+// display switching on rather than generic decoration. Kept short so it reads as
+// chrome polish, not a gate on anything the visitor is waiting for.
 function setupBrandMarkIntro() {
   if (reducedMotion.matches) return;
-  const mark = document.querySelector(".site-header .brand-mark svg");
-  const paths = mark ? Array.from(mark.querySelectorAll("[data-mark-path]")) : [];
-  const dots = mark ? Array.from(mark.querySelectorAll("circle")) : [];
-  if (!mark || !paths.length) return;
+  const mark = document.querySelector(".site-header .brand-mark img");
+  if (!mark) return;
 
-  const lengths = paths.map((path) => path.getTotalLength());
-  gsap.set(paths, { strokeDasharray: (i) => lengths[i], strokeDashoffset: (i) => lengths[i] });
-  gsap.set(dots, { scale: 0, transformOrigin: "50% 50%" });
-
+  gsap.set(mark, { opacity: 0, filter: "brightness(0.4) saturate(0.5)" });
   gsap
     .timeline()
-    .to(paths, { strokeDashoffset: 0, duration: 0.4, stagger: 0.05, ease: EASE })
-    .to(dots, { scale: 1, duration: 0.25, stagger: 0.04, ease: "back.out(2)" }, "-=0.15");
+    .to(mark, { opacity: 1, duration: 0.12, ease: "none" })
+    .to(mark, { filter: "brightness(1.5) saturate(1.4)", duration: 0.1, ease: "none" })
+    .to(mark, { filter: "brightness(1) saturate(1)", duration: 0.4, ease: EASE });
 }
 
 setupBrandMarkIntro();
 
-// Replaces the about-panel's abstract motif with the real Netravax "N" mark,
-// stroke-drawing it in as the section enters view — the one place the brand glyph
-// itself, not just decoration, is the content (About = who we are). Initial hidden
-// state is applied only here in JS (never in CSS), so if this never runs — reduced
-// motion, or any JS failure — the mark is left in its natural, fully-visible state.
+// Replaces the about-panel's abstract motif with the real Netravax logo, "powering
+// on" with the same flicker as the header mark when the section enters view — the
+// one place the brand mark itself, not just decoration, is the content (About = who
+// we are). Initial hidden state is applied only here in JS (never in CSS), so if
+// this never runs — reduced motion, or any JS failure — the mark is left in its
+// natural, fully-visible state.
 function setupAboutMotif() {
-  const motif = document.querySelector(".about-motif");
-  const paths = motif ? Array.from(motif.querySelectorAll("[data-motif-path]")) : [];
-  const dots = motif ? Array.from(motif.querySelectorAll("[data-motif-dots] circle")) : [];
-  if (!motif || !paths.length || reducedMotion.matches) return;
+  const motif = document.querySelector("[data-about-motif]");
+  if (!motif || reducedMotion.matches) return;
 
-  const lengths = paths.map((path) => path.getTotalLength());
-  gsap.set(paths, { strokeDasharray: (i) => lengths[i], strokeDashoffset: (i) => lengths[i] });
-  gsap.set(dots, { opacity: 0 });
-
+  gsap.set(motif, { opacity: 0, filter: "brightness(0.4) saturate(0.5)" });
   gsap
     .timeline({ scrollTrigger: { trigger: motif, start: REVEAL.panel.start } })
-    .to(paths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.08, ease: EASE })
-    .to(dots, { opacity: 1, duration: 0.4, stagger: 0.06, ease: EASE }, "-=0.3");
+    .to(motif, { opacity: 1, duration: 0.15, ease: "none" })
+    .to(motif, { filter: "brightness(1.5) saturate(1.4)", duration: 0.12, ease: "none" })
+    .to(motif, { filter: "brightness(1) saturate(1)", duration: 0.5, ease: EASE });
 }
 
 setupAboutMotif();
 
-// A persistent scroll-progress gauge shaped like the brand mark — the stroke draws
-// in and the node dots light up in step with how far through the page the visitor
-// is. Desktop/tablet only (the fixed side rail has nowhere good to sit on narrow
-// viewports) and skipped entirely under reduced motion, matching the
-// workflow-progress-ring precedent: this element has no meaningful static state, so
-// it stays hidden (CSS default opacity: 0) rather than showing a half-finished mark.
+// A persistent scroll-progress gauge: the real Netravax mark sitting inside a ring
+// (reusing the same pattern as .workflow-progress-ring) whose stroke fills in step
+// with how far through the page the visitor is. Desktop/tablet only (the fixed side
+// rail has nowhere good to sit on narrow viewports) and skipped entirely under
+// reduced motion, matching the workflow-progress-ring precedent: the ring has no
+// meaningful static state, so it stays hidden (CSS default opacity: 0) rather than
+// showing a half-finished gauge.
 function setupScrollProgressMark() {
   const rail = document.querySelector("[data-scroll-progress]");
-  const paths = rail ? Array.from(rail.querySelectorAll("[data-progress-path]")) : [];
-  const dots = rail ? Array.from(rail.querySelectorAll("[data-progress-dots] circle")) : [];
+  const ring = rail ? rail.querySelector("[data-progress-ring]") : null;
   const isCompactViewport = window.matchMedia("(max-width: 859px)").matches;
-  if (!rail || !paths.length || reducedMotion.matches || isCompactViewport) return;
+  if (!rail || !ring || reducedMotion.matches || isCompactViewport) return;
 
-  const lengths = paths.map((path) => path.getTotalLength());
-  gsap.set(paths, { strokeDasharray: (i) => lengths[i], strokeDashoffset: (i) => lengths[i] });
-  gsap.set(dots, { opacity: 0.25 });
   rail.classList.add("is-active");
 
-  gsap
-    .timeline({
-      scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: 0.3 }
-    })
-    .to(paths, { strokeDashoffset: 0, ease: "none" }, 0)
-    .to(dots, { opacity: 1, ease: "none", stagger: 0.15 }, 0);
+  gsap.to(ring, {
+    strokeDashoffset: 0,
+    ease: "none",
+    scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: 0.3 }
+  });
 }
 
 setupScrollProgressMark();
