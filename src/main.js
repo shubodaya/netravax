@@ -1,10 +1,30 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const APP_URL = "https://app.netravax.shubodaya.dev/";
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+// Smooth desktop wheel-scroll, wired into GSAP's ticker so it drives the
+// existing ScrollTrigger-linked animations (hero parallax, platform-console
+// scrub, workflow progress ring) with an eased scroll-position signal
+// instead of raw wheel deltas. Off entirely on touch/coarse-pointer devices
+// (native momentum scroll is already good there) and under
+// prefers-reduced-motion. Lenis wraps native scroll rather than replacing
+// it, so sticky positioning, anchor links and keyboard scrolling are
+// unaffected either way.
+function setupSmoothScroll() {
+  if (reducedMotion.matches || isCoarsePointer) return;
+  const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+setupSmoothScroll();
 
 // Motion convention (see also the color/motion doc block in styles.css):
 // power2.out throughout. The hero intro is deliberately brief (150ms, tiny
