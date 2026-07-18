@@ -10,13 +10,24 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(here, "..", "public");
 
-// The Netravax "Topology N" mark (viewBox 0 0 64 64), identical to public/favicon.svg:
-// two solid bars for legibility, plus a routed diagonal trace through a midpoint node,
-// echoing the node-and-link visual language used in the hero.
+// The Netravax "N" mark (viewBox 0 0 64 64), identical to public/favicon.svg: a
+// gradient recreation of the Netravax platform's own glowing neon-N glyph, kept as
+// solid bars (rather than the segmented/gapped neon-tube detail used at larger
+// on-page sizes) for legibility at favicon/PWA-icon scale.
 const nMark = `
-  <rect x="14" y="18" width="7" height="28" rx="1.5" fill="#74eeb9" />
-  <rect x="43" y="18" width="7" height="28" rx="1.5" fill="#74eeb9" />
-  <path d="M23 21 32 32 41 43" fill="none" stroke="#74eeb9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <defs>
+    <linearGradient id="nGrad" x1="14" y1="14" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#effff4" />
+      <stop offset=".35" stop-color="#b4ffd2" />
+      <stop offset=".7" stop-color="#74eeb9" />
+      <stop offset="1" stop-color="#14c35b" />
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#nGrad)" stroke-width="7" stroke-linecap="round">
+    <path d="M17.5 18 17.5 46" />
+    <path d="M46.5 18 46.5 46" />
+  </g>
+  <path d="M23 21 32 32 41 43" fill="none" stroke="url(#nGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
   <circle cx="23" cy="21" r="2.6" fill="#dbff8e" />
   <circle cx="32" cy="32" r="3" fill="#dbff8e" />
   <circle cx="41" cy="43" r="2.6" fill="#dbff8e" />
