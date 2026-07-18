@@ -439,6 +439,38 @@ function setupContactFieldGlow() {
 
 setupContactFieldGlow();
 
+// Subtle magnetic pull on the single highest-value action on the page —
+// draws attention to it, not decoration applied broadly. Bound to the
+// button's own hover bounds only (no wider capture radius) to keep the
+// pull tightly scoped and restrained. Off on touch (no persistent cursor
+// to follow) and under reduced-motion (continuous pointer-tracking motion
+// is exactly what that preference exists to disable).
+function setupMagneticCTA() {
+  if (reducedMotion.matches || isCoarsePointer) return;
+  const btn = document.querySelector(".hero-actions .button-primary");
+  if (!btn) return;
+
+  const MAX_OFFSET = 10;
+  const STRENGTH = 0.35;
+  const xTo = gsap.quickTo(btn, "x", { duration: 0.3, ease: EASE });
+  const yTo = gsap.quickTo(btn, "y", { duration: 0.3, ease: EASE });
+
+  btn.addEventListener("mousemove", (event) => {
+    const rect = btn.getBoundingClientRect();
+    const relX = event.clientX - (rect.left + rect.width / 2);
+    const relY = event.clientY - (rect.top + rect.height / 2);
+    xTo(gsap.utils.clamp(-MAX_OFFSET, MAX_OFFSET, relX * STRENGTH));
+    yTo(gsap.utils.clamp(-MAX_OFFSET, MAX_OFFSET, relY * STRENGTH));
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    xTo(0);
+    yTo(0);
+  });
+}
+
+setupMagneticCTA();
+
 const fields = {
   name: {
     node: document.getElementById("name"),
