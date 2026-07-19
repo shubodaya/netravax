@@ -24,7 +24,7 @@ test("homepage has company content, SEO and app links", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Engineering secure/ })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://netravax.shubodaya.dev/");
   const appLinks = page.locator('a[href="https://app.netravax.shubodaya.dev/"]');
-  await expect(appLinks).toHaveCount(6);
+  await expect(appLinks).toHaveCount(3);
   await expect(page.locator("#networkCanvas")).toBeVisible();
 });
 

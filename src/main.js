@@ -304,6 +304,25 @@ function setupServicesReveal() {
 
 setupServicesReveal();
 
+function setupWorkReveal() {
+  const cards = document.querySelectorAll(".work-grid .work-card");
+  if (!cards.length || reducedMotion.matches) return;
+
+  gsap.from(cards, {
+    opacity: 0,
+    y: REVEAL.grid.y,
+    duration: REVEAL.grid.duration,
+    stagger: REVEAL.grid.stagger,
+    ease: EASE,
+    scrollTrigger: {
+      trigger: ".work-grid",
+      start: REVEAL.grid.start
+    }
+  });
+}
+
+setupWorkReveal();
+
 function setupExpertiseReveal() {
   const cards = document.querySelectorAll(".expertise-grid .expertise-card");
   if (!cards.length || reducedMotion.matches) return;
