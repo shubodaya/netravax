@@ -25,15 +25,18 @@ test("homepage has company content, SEO and app links", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://netravax.shubodaya.dev/");
   const appLinks = page.locator('a[href="https://app.netravax.shubodaya.dev/"]');
   await expect(appLinks).toHaveCount(3);
-  await expect(page.locator("#networkCanvas")).toBeVisible();
+  await expect(page.locator("#heroCable")).toBeVisible();
 });
 
-test("network canvas renders nonblank pixels", async ({ page }) => {
-  const hasPaint = await page.locator("#networkCanvas").evaluate((canvas) => {
-    const context = canvas.getContext("2d");
-    const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
-    for (let index = 0; index < data.length; index += 4) {
-      if (data[index] || data[index + 1] || data[index + 2] || data[index + 3]) return true;
+test("hero 3D cable canvas renders nonblank pixels", async ({ page }) => {
+  await page.waitForTimeout(500); // dynamic-imported three.js module needs a beat to init
+  const hasPaint = await page.locator("#heroCable").evaluate((canvas) => {
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+    if (!gl) return false;
+    const pixels = new Uint8Array(canvas.width * canvas.height * 4);
+    gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    for (let index = 0; index < pixels.length; index += 4) {
+      if (pixels[index] || pixels[index + 1] || pixels[index + 2] || pixels[index + 3]) return true;
     }
     return false;
   });

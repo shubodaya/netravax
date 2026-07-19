@@ -151,11 +151,9 @@ setupWorkflowProgress();
 function setupHeroParallax() {
   const hero = document.querySelector(".hero");
   const overlay = document.querySelector(".topology-overlay");
-  const canvas = document.getElementById("networkCanvas");
   if (!hero || reducedMotion.matches) return;
 
   const scrollTrigger = { trigger: hero, start: "top top", end: "bottom top", scrub: true };
-  if (canvas) gsap.to(canvas, { yPercent: 5, ease: "none", scrollTrigger });
   if (overlay) gsap.to(overlay, { yPercent: 10, ease: "none", scrollTrigger });
 }
 
@@ -342,146 +340,35 @@ function setupExpertiseReveal() {
 
 setupExpertiseReveal();
 
-function setupNetworkCanvas() {
-  const canvas = document.getElementById("networkCanvas");
+// The hero visual: a real WebGL 3D scene (see hero-cable.js) rendering the
+// brand "N" mark as a single continuous cable, camera orbiting around it as
+// the visitor scrolls through the hero. Loaded via dynamic import so the
+// three.js payload isn't part of the critical main bundle — hero text is
+// already visible immediately (see setupHeroIntro above); the 3D visual is
+// allowed to pop in a beat later, same "motion is polish, not a gate"
+// principle as everywhere else on this site. If WebGL is unavailable,
+// hero-cable.js returns false and the canvas is simply left empty — the
+// hero-visual's own background gradient and the topology-overlay cards
+// still carry the section on their own.
+async function setupHeroCable3D() {
+  const canvas = document.getElementById("heroCable");
+  const hero = document.querySelector(".hero");
   if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  // Four hub nodes correspond to the labeled Core/Edge/Cloud/Ops overlay
-  // cards (roughly matching their on-screen quadrant); satellites are
-  // unlabeled texture representing the endpoints each tier connects.
-  const nodes = [
-    { x: 0.4, y: 0.29, r: 5.6, hub: true }, // 0 core
-    { x: 0.74, y: 0.23, r: 5, hub: true }, // 1 edge
-    { x: 0.68, y: 0.75, r: 5, hub: true }, // 2 cloud
-    { x: 0.2, y: 0.71, r: 5, hub: true }, // 3 ops
-    { x: 0.13, y: 0.18, r: 3.2 }, // 4 remote site
-    { x: 0.09, y: 0.46, r: 3 }, // 5 branch link
-    { x: 0.9, y: 0.14, r: 3.1 }, // 6 cloud api
-    { x: 0.92, y: 0.5, r: 3.2 }, // 7 cloud region
-    { x: 0.5, y: 0.85, r: 3 }, // 8 monitoring feed
-    { x: 0.52, y: 0.47, r: 3.4 } // 9 exchange relay
-  ];
-  const links = [
-    [0, 1],
-    [0, 2],
-    [0, 3],
-    [4, 1],
-    [4, 0],
-    [5, 3],
-    [5, 0],
-    [6, 1],
-    [7, 2],
-    [7, 1],
-    [8, 3],
-    [8, 2],
-    [9, 0],
-    [9, 2],
-    [9, 3]
-  ];
-  const PRIMARY_LINK_COUNT = 3;
-  const pulses = links.map((link, index) => ({
-    link,
-    t: (index * 0.137) % 1,
-    speed: 0.0022 + (index % 4) * 0.0005
-  }));
-  let animationId = 0;
-  let visible = true;
 
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.max(1, Math.round(rect.width * ratio));
-    canvas.height = Math.max(1, Math.round(rect.height * ratio));
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-  }
+  const { setupHeroCable } = await import("./hero-cable.js");
+  const scene = setupHeroCable({ reducedMotion, isCoarsePointer });
+  if (!scene || !scene.setScrollT || !hero) return;
 
-  function draw(staticFrame = false) {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    ctx.clearRect(0, 0, width, height);
-
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, "rgba(61, 220, 151, 0.08)");
-    gradient.addColorStop(0.52, "rgba(108, 190, 255, 0.05)");
-    gradient.addColorStop(1, "rgba(219, 255, 142, 0.06)");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-
-    links.forEach(([fromIndex, toIndex], index) => {
-      const from = nodes[fromIndex];
-      const to = nodes[toIndex];
-      const x1 = from.x * width;
-      const y1 = from.y * height;
-      const x2 = to.x * width;
-      const y2 = to.y * height;
-      const isPrimary = index < PRIMARY_LINK_COUNT;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = isPrimary
-        ? "rgba(219, 255, 142, 0.5)"
-        : index % 2 === 0
-          ? "rgba(116, 238, 185, 0.34)"
-          : "rgba(111, 178, 255, 0.24)";
-      ctx.lineWidth = isPrimary ? 1.8 : 1;
-      ctx.stroke();
-    });
-
-    pulses.forEach((pulse) => {
-      const [fromIndex, toIndex] = pulse.link;
-      const from = nodes[fromIndex];
-      const to = nodes[toIndex];
-      if (!staticFrame) pulse.t = (pulse.t + pulse.speed) % 1;
-      const x = (from.x + (to.x - from.x) * pulse.t) * width;
-      const y = (from.y + (to.y - from.y) * pulse.t) * height;
-      ctx.beginPath();
-      ctx.arc(x, y, 3.8, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(219, 255, 142, 0.82)";
-      ctx.shadowColor = "rgba(219, 255, 142, 0.8)";
-      ctx.shadowBlur = 14;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    });
-
-    nodes.forEach((node) => {
-      const x = node.x * width;
-      const y = node.y * height;
-      ctx.beginPath();
-      ctx.arc(x, y, node.r + (node.hub ? 13 : 8), 0, Math.PI * 2);
-      ctx.fillStyle = node.hub ? "rgba(219, 255, 142, 0.1)" : "rgba(88, 219, 166, 0.07)";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(x, y, node.r, 0, Math.PI * 2);
-      ctx.fillStyle = node.hub ? "#dbff8e" : "#7af0c0";
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.32)";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    });
-
-    if (!staticFrame && visible && !reducedMotion.matches) {
-      animationId = requestAnimationFrame(() => draw(false));
-    }
-  }
-
-  resize();
-  draw(reducedMotion.matches);
-  window.addEventListener("resize", () => {
-    resize();
-    draw(reducedMotion.matches);
-  });
-  document.addEventListener("visibilitychange", () => {
-    visible = !document.hidden;
-    if (visible && !reducedMotion.matches) draw(false);
-    if (!visible) cancelAnimationFrame(animationId);
-  });
-  reducedMotion.addEventListener?.("change", () => {
-    cancelAnimationFrame(animationId);
-    draw(reducedMotion.matches);
+  ScrollTrigger.create({
+    trigger: hero,
+    start: "top top",
+    end: "bottom top",
+    scrub: true,
+    onUpdate: (self) => scene.setScrollT(self.progress)
   });
 }
 
-setupNetworkCanvas();
+setupHeroCable3D();
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 const turnstileSlot = document.querySelector("[data-turnstile]");
