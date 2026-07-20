@@ -36,6 +36,46 @@ async function verifyTurnstile(token, request, env) {
   return Boolean(result.success);
 }
 
+const CONTACT_DESTINATION = "contact@shubodaya.dev";
+const CONTACT_SENDER = { email: "enquiries@netravax.shubodaya.dev", name: "Netravax Technologies" };
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function buildEnquiryEmail(enquiry, clientIp) {
+  const rows = [
+    ["Name", enquiry.name],
+    ["Work email", enquiry.email],
+    ["Company", enquiry.company || "—"],
+    ["Service needed", enquiry.service],
+    ["Preferred contact method", enquiry.contactMethod],
+    ["Received", enquiry.receivedAt],
+    ["Client IP", clientIp || "—"]
+  ];
+
+  const text = [
+    ...rows.map(([label, value]) => `${label}: ${value}`),
+    "",
+    "Project summary:",
+    enquiry.summary
+  ].join("\n");
+
+  const html = `
+    <table cellpadding="0" cellspacing="0" style="font-family: sans-serif; font-size: 14px; color: #0b1b16;">
+      ${rows.map(([label, value]) => `<tr><td style="padding: 4px 12px 4px 0; font-weight: 700;">${escapeHtml(label)}</td><td style="padding: 4px 0;">${escapeHtml(value)}</td></tr>`).join("")}
+    </table>
+    <p style="font-weight: 700; margin-top: 20px;">Project summary</p>
+    <p style="white-space: pre-wrap;">${escapeHtml(enquiry.summary)}</p>
+  `;
+
+  return { html, text };
+}
+
 export async function onRequestOptions() {
   return json({ ok: true });
 }
@@ -86,21 +126,34 @@ export async function onRequestPost({ request, env }) {
     return json({ message: "Spam protection failed. Please try again." }, { status: 400 });
   }
 
-  if (!env.NETRAVAX_CONTACT_WEBHOOK_URL) {
+  if (!env.EMAIL) {
     return json(
       { message: "The secure contact endpoint is not configured yet. Your message was not sent." },
       { status: 503 }
     );
   }
 
-  const upstream = await fetch(env.NETRAVAX_CONTACT_WEBHOOK_URL, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(enquiry)
-  });
+  const { html, text } = buildEnquiryEmail(enquiry, request.headers.get("CF-Connecting-IP"));
 
-  if (!upstream.ok) {
-    return json({ message: "The enquiry could not be sent right now." }, { status: 502 });
+  try {
+    await env.EMAIL.send({
+      to: CONTACT_DESTINATION,
+      from: CONTACT_SENDER,
+      replyTo: enquiry.email,
+      subject: `New enquiry: ${enquiry.service} — ${enquiry.name}`,
+      html,
+      text
+    });
+  } catch (error) {
+    const notOnboarded = error && (error.code === "E_SENDER_NOT_VERIFIED" || error.code === "E_SENDER_DOMAIN_NOT_AVAILABLE");
+    return json(
+      {
+        message: notOnboarded
+          ? "The secure contact endpoint is not configured yet. Your message was not sent."
+          : "The enquiry could not be sent right now."
+      },
+      { status: notOnboarded ? 503 : 502 }
+    );
   }
 
   return json({ message: "Thank you. Your enquiry has been received." });
