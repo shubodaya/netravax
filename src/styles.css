@@ -1248,6 +1248,49 @@ textarea[aria-invalid="true"] {
   font-size: 1.05rem;
 }
 
+/* .work-main reuses .policy-header/.policy-page for the page shell but
+   needs the wider card-grid width (--max, same as .section-shell) rather
+   than .policy-main's 780px reading width meant for legal-copy pages. */
+.work-main {
+  max-width: calc(var(--max) + 48px);
+  margin: 0 auto;
+  padding: 82px 24px 120px;
+  display: grid;
+  gap: 64px;
+}
+
+.work-intro {
+  max-width: 760px;
+  margin-bottom: 0;
+}
+
+.work-intro h1 {
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+}
+
+.work-category h2 {
+  margin-bottom: 24px;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+}
+
+.work-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(12, 26, 22, 0.74);
+}
+
+.work-cta p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
 @media (max-width: 1080px) {
   .hero-grid,
   .platform-layout,
