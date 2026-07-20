@@ -21,7 +21,7 @@ Build command: npm run build
 Build output directory: dist
 ```
 
-No environment variables required — the contact form submits via a `mailto:` link (see `src/main.js`), not a server endpoint.
+No environment variables required — the contact form submits to FormSubmit (see `src/main.js`), not a server endpoint of our own.
 
 ## Existing App
 

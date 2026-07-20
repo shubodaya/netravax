@@ -503,30 +503,21 @@ Object.entries(fields).forEach(([key, config]) => {
   config.node?.addEventListener("change", () => setFieldError(key));
 });
 
-// Same delivery mechanism as the other shubodaya.dev sites (portfolio's
-// Contact section is a bare mailto: link): no server endpoint at all, so
-// there's nothing to onboard, no binding to configure, no spam-protection
-// surface to defend. The form still collects and validates structured
-// fields client-side — that's real value the other sites don't need — it
-// just hands the result to the visitor's own mail client instead of an API.
-const CONTACT_EMAIL = "contact@shubodaya.dev";
+// Same delivery service the other shubodaya.dev sites use for their contact
+// forms (e.g. network.shubodaya.dev): FormSubmit (formsubmit.co) — a
+// third-party form backend, no API key or server endpoint of our own
+// required. FormSubmit activation is scoped per sending domain, so this
+// domain needs its own one-time "Activate Form" click even though
+// contact@shubodaya.dev is already active on other shubodaya.dev sites.
+// Uses FormSubmit's AJAX endpoint (Accept: application/json) rather than a
+// native form POST so submission stays inline — no page navigation, same
+// status-message UX as every other interaction on this form. FormSubmit
+// returns HTTP 200 with success:"false" (a string) while activation is
+// pending, so the HTTP status alone can't be trusted — the JSON body must
+// be checked too.
+const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/contact@shubodaya.dev";
 
-function buildMailtoUrl(payload) {
-  const subject = `New enquiry: ${payload.service} — ${payload.name}`;
-  const body = [
-    `Name: ${payload.name}`,
-    `Work email: ${payload.email}`,
-    `Company: ${payload.company || "—"}`,
-    `Service needed: ${payload.service}`,
-    `Preferred contact method: ${payload.contactMethod}`,
-    "",
-    "Project summary:",
-    payload.summary
-  ].join("\n");
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-contactForm?.addEventListener("submit", (event) => {
+contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   statusNode.textContent = "";
   statusNode.className = "form-status";
@@ -536,9 +527,33 @@ contactForm?.addEventListener("submit", (event) => {
     return;
   }
 
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending...";
+
   const formData = new FormData(contactForm);
   const payload = Object.fromEntries(formData.entries());
-  window.location.href = buildMailtoUrl(payload);
-  statusNode.textContent = "Opening your email client — press send there to complete your enquiry.";
-  statusNode.classList.add("is-success");
+  payload._subject = `New enquiry: ${payload.service} — ${payload.name}`;
+  payload._template = "table";
+  payload._captcha = false;
+
+  try {
+    const response = await fetch(FORMSUBMIT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error();
+    const result = await response.json().catch(() => null);
+    if (result && String(result.success) === "false") throw new Error();
+    contactForm.reset();
+    statusNode.textContent = "Thank you. Your enquiry has been sent.";
+    statusNode.classList.add("is-success");
+  } catch {
+    statusNode.textContent = "The enquiry could not be sent right now. Please try again shortly.";
+    statusNode.classList.add("is-error");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Request a consultation";
+  }
 });

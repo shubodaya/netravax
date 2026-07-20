@@ -618,7 +618,13 @@
               engineering work. Do not include passwords, private keys or sensitive production data.
             </p>
           </div>
-          <form class="contact-form reveal" id="contactForm" novalidate>
+          <form
+            class="contact-form reveal"
+            id="contactForm"
+            action="https://formsubmit.co/contact@shubodaya.dev"
+            method="POST"
+            novalidate
+          >
             <div class="form-grid">
               <label>
                 <span>Name</span>
@@ -671,7 +677,6 @@
             </label>
             <small class="field-error" id="consentError"></small>
             <button class="button button-primary" type="submit">Request a consultation</button>
-            <p class="form-hint">Submitting opens your email client with this enquiry pre-filled — press send there to complete it.</p>
             <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
           </form>
         </div>

@@ -42,6 +42,8 @@ Do not move, copy or merge the two projects.
 
 ## Contact Form
 
-The form submits via a `mailto:contact@shubodaya.dev` link built client-side in `src/main.js` — the same mechanism
-the other shubodaya.dev sites use for contact. There's no server endpoint, so nothing to configure: fields are
-validated client-side, then handed to the visitor's own mail client pre-filled with the enquiry.
+The form submits to [FormSubmit](https://formsubmit.co) (`https://formsubmit.co/ajax/contact@shubodaya.dev`), the
+same third-party form backend the other shubodaya.dev sites use for contact (e.g. network.shubodaya.dev). Fields are
+validated client-side in `src/main.js`, then posted via FormSubmit's AJAX endpoint so submission stays inline (no
+page navigation). No API key or server endpoint of our own — `contact@shubodaya.dev` is already an activated
+FormSubmit destination via those other sites.

@@ -18,6 +18,6 @@ This repository is a static public website for Netravax Technologies.
 
 ## Contact Form
 
-The form validates required fields client-side, then builds a `mailto:contact@shubodaya.dev` link pre-filled with
-the enquiry and hands off to the visitor's own mail client (`src/main.js`). No server endpoint, no provider secrets,
-same mechanism the other shubodaya.dev sites use for contact.
+The form validates required fields client-side, then posts to FormSubmit's AJAX endpoint
+(`https://formsubmit.co/ajax/contact@shubodaya.dev`) in `src/main.js` — the same third-party form backend the other
+shubodaya.dev sites use for contact. No server endpoint or provider secrets of our own.
