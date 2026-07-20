@@ -335,23 +335,25 @@ function setupExpertiseReveal() {
 
 setupExpertiseReveal();
 
-// The hero visual: a real WebGL 3D scene (see hero-cable.js) rendering the
-// brand "N" mark as a single continuous cable, camera orbiting around it as
-// the visitor scrolls through the hero. Loaded via dynamic import so the
-// three.js payload isn't part of the critical main bundle — hero text is
-// already visible immediately (see setupHeroIntro above); the 3D visual is
-// allowed to pop in a beat later, same "motion is polish, not a gate"
-// principle as everywhere else on this site. If WebGL is unavailable,
-// hero-cable.js returns false and the canvas is simply left empty — the
-// hero-visual's own background gradient and the topology-overlay cards
-// still carry the section on their own.
-async function setupHeroCable3D() {
-  const canvas = document.getElementById("heroCable");
+// The hero visual: a real WebGL 3D scene (see hero-network.js) rendering a
+// small live network topology -- Core routing to Edge, Cloud and Ops, with
+// the four labelled cards projected onto their actual node positions every
+// frame -- camera orbiting as the visitor scrolls through the hero. Loaded
+// via dynamic import so the three.js payload isn't part of the critical
+// main bundle — hero text is already visible immediately (see
+// setupHeroIntro above); the 3D visual is allowed to pop in a beat later,
+// same "motion is polish, not a gate" principle as everywhere else on this
+// site. If WebGL is unavailable, hero-network.js returns false and the
+// canvas is simply left empty — the hero-visual's own background gradient
+// and the topology-overlay cards (at their CSS fallback position) still
+// carry the section on their own.
+async function setupHeroNetwork3D() {
+  const canvas = document.getElementById("heroNetwork");
   const hero = document.querySelector(".hero");
   if (!canvas) return;
 
-  const { setupHeroCable } = await import("./hero-cable.js");
-  const scene = setupHeroCable({ reducedMotion, isCoarsePointer });
+  const { setupHeroNetwork } = await import("./hero-network.js");
+  const scene = setupHeroNetwork({ reducedMotion, isCoarsePointer });
   if (!scene || !scene.setScrollT || !hero) return;
 
   ScrollTrigger.create({
@@ -363,7 +365,7 @@ async function setupHeroCable3D() {
   });
 }
 
-setupHeroCable3D();
+setupHeroNetwork3D();
 
 // A second, separate 3D layer (see page-field.js): a sparse field of network
 // nodes sitting behind every section, not just the hero. The camera flies

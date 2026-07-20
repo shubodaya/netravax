@@ -25,12 +25,12 @@ test("homepage has company content, SEO and app links", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://netravax.shubodaya.dev/");
   const appLinks = page.locator('a[href="https://app.netravax.shubodaya.dev/"]');
   await expect(appLinks).toHaveCount(3);
-  await expect(page.locator("#heroCable")).toBeVisible();
+  await expect(page.locator("#heroNetwork")).toBeVisible();
 });
 
-test("hero 3D cable canvas renders nonblank pixels", async ({ page }) => {
+test("hero 3D network canvas renders nonblank pixels", async ({ page }) => {
   await page.waitForTimeout(500); // dynamic-imported three.js module needs a beat to init
-  const hasPaint = await page.locator("#heroCable").evaluate((canvas) => {
+  const hasPaint = await page.locator("#heroNetwork").evaluate((canvas) => {
     const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
     if (!gl) return false;
     const pixels = new Uint8Array(canvas.width * canvas.height * 4);

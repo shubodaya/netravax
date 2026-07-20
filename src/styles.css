@@ -498,7 +498,7 @@ h3 {
   isolation: isolate;
 }
 
-#heroCable {
+#heroNetwork {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -520,6 +520,7 @@ h3 {
   background: rgba(7, 17, 15, 0.74);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
   padding: 14px;
+  will-change: transform;
 }
 
 .topology-node span {
@@ -556,6 +557,18 @@ h3 {
 .topology-node--ops {
   left: 9%;
   bottom: 19%;
+}
+
+/* Label accent colour matches its node's colour in the 3D scene (see
+   hero-network.js NODE_DEFS), reinforcing that each card is genuinely
+   attached to a specific node rather than an arbitrary caption. */
+.topology-node--cloud span {
+  color: var(--accent-2);
+}
+
+.topology-node--core span,
+.topology-node--ops span {
+  color: var(--accent);
 }
 
 .capability-strip {
