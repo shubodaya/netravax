@@ -1126,13 +1126,6 @@ textarea[aria-invalid="true"] {
   accent-color: var(--accent);
 }
 
-.honeypot {
-  position: absolute;
-  left: -100vw;
-  width: 1px;
-  height: 1px;
-}
-
 .form-status {
   min-height: 1.4em;
   margin: 0;
@@ -1147,8 +1140,10 @@ textarea[aria-invalid="true"] {
   color: var(--danger);
 }
 
-.turnstile-slot:empty {
-  display: none;
+.form-hint {
+  margin: 0;
+  color: var(--soft);
+  font-size: 0.84rem;
 }
 
 .site-footer {

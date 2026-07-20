@@ -21,12 +21,7 @@ Build command: npm run build
 Build output directory: dist
 ```
 
-Environment variables:
-
-```text
-NETRAVAX_CONTACT_WEBHOOK_URL
-TURNSTILE_SECRET_KEY
-```
+No environment variables required — the contact form submits via a `mailto:` link (see `src/main.js`), not a server endpoint.
 
 ## Existing App
 

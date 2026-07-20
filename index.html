@@ -619,8 +619,6 @@
             </p>
           </div>
           <form class="contact-form reveal" id="contactForm" novalidate>
-            <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            <input type="hidden" name="startedAt" id="startedAt" />
             <div class="form-grid">
               <label>
                 <span>Name</span>
@@ -672,8 +670,8 @@
               <span>I consent to Netravax Technologies using this information to respond to my enquiry.</span>
             </label>
             <small class="field-error" id="consentError"></small>
-            <div class="turnstile-slot" data-turnstile></div>
             <button class="button button-primary" type="submit">Request a consultation</button>
+            <p class="form-hint">Submitting opens your email client with this enquiry pre-filled — press send there to complete it.</p>
             <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
           </form>
         </div>

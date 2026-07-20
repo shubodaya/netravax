@@ -7,7 +7,6 @@ This repository is a static public website for Netravax Technologies.
 - Vite for local development and production build.
 - Plain HTML, CSS and JavaScript for the public experience.
 - Cloudflare Pages static assets.
-- Cloudflare Pages Function at `/api/contact` for validated contact-form forwarding.
 
 ## Runtime Behaviour
 
@@ -19,8 +18,6 @@ This repository is a static public website for Netravax Technologies.
 
 ## Contact Form
 
-The browser submits JSON to `/api/contact`. The server function validates required fields, consent, honeypot data,
-minimum form age and optional Cloudflare Turnstile. It forwards only to the server-side
-`NETRAVAX_CONTACT_WEBHOOK_URL` when configured.
-
-No provider secrets are included in client-side bundles.
+The form validates required fields client-side, then builds a `mailto:contact@shubodaya.dev` link pre-filled with
+the enquiry and hands off to the visitor's own mail client (`src/main.js`). No server endpoint, no provider secrets,
+same mechanism the other shubodaya.dev sites use for contact.

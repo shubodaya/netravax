@@ -44,15 +44,10 @@ const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const contactForm = document.getElementById("contactForm");
 const statusNode = document.getElementById("formStatus");
-const startedAt = document.getElementById("startedAt");
 
 document.querySelectorAll('a[href="https://app.netravax.shubodaya.dev/"]').forEach((link) => {
   link.href = APP_URL;
 });
-
-if (startedAt) {
-  startedAt.value = String(Date.now());
-}
 
 function setHeaderState() {
   header?.classList.toggle("is-scrolled", window.scrollY > 24);
@@ -396,30 +391,6 @@ async function setupPageField3D() {
 
 setupPageField3D();
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
-const turnstileSlot = document.querySelector("[data-turnstile]");
-let turnstileWidgetId = null;
-
-function setupTurnstile() {
-  if (!TURNSTILE_SITE_KEY || !turnstileSlot) return;
-  window.__netravaxTurnstileReady = () => {
-    if (!window.turnstile) return;
-    turnstileWidgetId = window.turnstile.render(turnstileSlot, {
-      sitekey: TURNSTILE_SITE_KEY,
-      theme: "dark",
-      action: "contact"
-    });
-  };
-  const script = document.createElement("script");
-  script.src =
-    "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__netravaxTurnstileReady";
-  script.async = true;
-  script.defer = true;
-  document.head.appendChild(script);
-}
-
-setupTurnstile();
-
 function setupContactFieldGlow() {
   if (!contactForm || reducedMotion.matches) return;
   const inputs = contactForm.querySelectorAll("input, select, textarea");
@@ -532,7 +503,30 @@ Object.entries(fields).forEach(([key, config]) => {
   config.node?.addEventListener("change", () => setFieldError(key));
 });
 
-contactForm?.addEventListener("submit", async (event) => {
+// Same delivery mechanism as the other shubodaya.dev sites (portfolio's
+// Contact section is a bare mailto: link): no server endpoint at all, so
+// there's nothing to onboard, no binding to configure, no spam-protection
+// surface to defend. The form still collects and validates structured
+// fields client-side — that's real value the other sites don't need — it
+// just hands the result to the visitor's own mail client instead of an API.
+const CONTACT_EMAIL = "contact@shubodaya.dev";
+
+function buildMailtoUrl(payload) {
+  const subject = `New enquiry: ${payload.service} — ${payload.name}`;
+  const body = [
+    `Name: ${payload.name}`,
+    `Work email: ${payload.email}`,
+    `Company: ${payload.company || "—"}`,
+    `Service needed: ${payload.service}`,
+    `Preferred contact method: ${payload.contactMethod}`,
+    "",
+    "Project summary:",
+    payload.summary
+  ].join("\n");
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+contactForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   statusNode.textContent = "";
   statusNode.className = "form-status";
@@ -542,39 +536,9 @@ contactForm?.addEventListener("submit", async (event) => {
     return;
   }
 
-  const submitButton = contactForm.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  submitButton.textContent = "Sending...";
   const formData = new FormData(contactForm);
   const payload = Object.fromEntries(formData.entries());
-  payload.consent = fields.consent.node.checked;
-  if (turnstileWidgetId !== null && window.turnstile) {
-    payload.turnstileToken = window.turnstile.getResponse(turnstileWidgetId) || "";
-  }
-
-  try {
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(result.message || "The secure contact endpoint is not configured yet.");
-    }
-    contactForm.reset();
-    if (startedAt) startedAt.value = String(Date.now());
-    statusNode.textContent = result.message || "Your enquiry has been sent.";
-    statusNode.classList.add("is-success");
-  } catch (error) {
-    statusNode.textContent =
-      error.message || "The secure contact endpoint is not available in this preview. Your message was not sent.";
-    statusNode.classList.add("is-error");
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = "Request a consultation";
-    if (turnstileWidgetId !== null && window.turnstile) {
-      window.turnstile.reset(turnstileWidgetId);
-    }
-  }
+  window.location.href = buildMailtoUrl(payload);
+  statusNode.textContent = "Opening your email client — press send there to complete your enquiry.";
+  statusNode.classList.add("is-success");
 });

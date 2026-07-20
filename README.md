@@ -42,10 +42,6 @@ Do not move, copy or merge the two projects.
 
 ## Contact Form
 
-The client form posts to `/api/contact`, implemented as a Cloudflare Pages Function. Configure these server-side
-environment variables in the Pages project:
-
-- `NETRAVAX_CONTACT_WEBHOOK_URL`
-- `TURNSTILE_SECRET_KEY` (optional, recommended before production)
-
-No mail provider credentials or API secrets are exposed to the browser.
+The form submits via a `mailto:contact@shubodaya.dev` link built client-side in `src/main.js` — the same mechanism
+the other shubodaya.dev sites use for contact. There's no server endpoint, so nothing to configure: fields are
+validated client-side, then handed to the visitor's own mail client pre-filled with the enquiry.
