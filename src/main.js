@@ -370,6 +370,32 @@ async function setupHeroCable3D() {
 
 setupHeroCable3D();
 
+// A second, separate 3D layer (see page-field.js): a sparse field of network
+// nodes sitting behind every section, not just the hero. The camera flies
+// through it across the *entire* page's scroll range rather than fading a
+// static image — existing section content is untouched, this only occupies
+// the negative space already visible around/between cards and panels. Kept
+// as its own canvas/renderer rather than folding into hero-cable.js so nei-
+// ther has to know about the other's scroll range or lifecycle.
+async function setupPageField3D() {
+  const canvas = document.getElementById("pageField");
+  if (!canvas) return;
+
+  const { setupPageField } = await import("./page-field.js");
+  const field = setupPageField({ reducedMotion, isCoarsePointer });
+  if (!field || !field.setScrollT) return;
+
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: "top top",
+    end: "bottom bottom",
+    scrub: 0.4,
+    onUpdate: (self) => field.setScrollT(self.progress)
+  });
+}
+
+setupPageField3D();
+
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 const turnstileSlot = document.querySelector("[data-turnstile]");
 let turnstileWidgetId = null;

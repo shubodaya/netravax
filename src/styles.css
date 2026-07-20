@@ -53,6 +53,29 @@ html {
   scroll-padding-top: calc(var(--header) + 24px);
 }
 
+/* Persistent whole-page background (see setupPageField in main.js /
+   page-field.js): a 3D node field the camera flies through across the
+   entire scroll range, sitting behind every section. Negative z-index keeps
+   it below normal in-flow content (header/main/footer) while still painting
+   above the body's own gradient below it. Hidden outright under reduced
+   motion and on narrow/short viewports where it would mostly sit behind
+   opaque content anyway and isn't worth the render cost. */
+#pageField {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 640px) {
+  #pageField {
+    display: none;
+  }
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -660,7 +683,7 @@ h3 {
 
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
