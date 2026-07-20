@@ -1,5 +1,4 @@
 const MAX_SUMMARY_LENGTH = 4000;
-const MIN_FORM_AGE_MS = 2500;
 const MAX_FORM_AGE_MS = 2 * 60 * 60 * 1000;
 
 function json(payload, init = {}) {
@@ -92,9 +91,19 @@ export async function onRequestPost({ request, env }) {
     return json({ message: "Thank you. Your enquiry has been received." });
   }
 
+  // The lower bound here used to compare a client-supplied startedAt
+  // against the server's own Date.now() and reject anything under 2.5s --
+  // in production this produced false positives for genuine users (Workers'
+  // clock isn't guaranteed to line up tightly with a visitor's device clock,
+  // and this cross-clock comparison has no way to account for that drift).
+  // The honeypot field above already catches the "bot fills every field
+  // instantly" pattern without depending on any clock at all, so the speed
+  // check isn't pulling its own weight here. Kept the upper bound (stale/
+  // reloaded-tab pages) since a multi-hour threshold has enough slack that
+  // ordinary clock drift can't trigger it.
   const startedAt = Number(body.startedAt || 0);
   const formAge = Date.now() - startedAt;
-  if (!startedAt || formAge < MIN_FORM_AGE_MS || formAge > MAX_FORM_AGE_MS) {
+  if (!startedAt || formAge > MAX_FORM_AGE_MS) {
     return json({ message: "Please refresh the page and try the form again." }, { status: 400 });
   }
 
