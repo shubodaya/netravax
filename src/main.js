@@ -549,7 +549,8 @@ contactForm?.addEventListener("submit", async (event) => {
     contactForm.reset();
     statusNode.textContent = "Thank you. Your enquiry has been sent.";
     statusNode.classList.add("is-success");
-  } catch {
+  } catch (error) {
+    console.error("Contact form submission failed:", error);
     statusNode.textContent = "The enquiry could not be sent right now. Please try again shortly.";
     statusNode.classList.add("is-error");
   } finally {
