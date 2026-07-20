@@ -83,7 +83,8 @@ export function setupHeroNetwork({ reducedMotion, isCoarsePointer }) {
   let renderer;
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
-  } catch {
+  } catch (error) {
+    console.error("Hero network WebGL init failed:", error);
     return false;
   }
   if (!renderer) return false;

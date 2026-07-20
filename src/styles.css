@@ -496,6 +496,7 @@ h3 {
     #07110f;
   box-shadow: var(--shadow);
   isolation: isolate;
+  contain: layout paint;
 }
 
 #heroNetwork {

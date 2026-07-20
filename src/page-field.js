@@ -78,7 +78,8 @@ export function setupPageField({ reducedMotion, isCoarsePointer }) {
   let renderer;
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
-  } catch {
+  } catch (error) {
+    console.error("Page field WebGL init failed:", error);
     return false;
   }
   if (!renderer) return false;
