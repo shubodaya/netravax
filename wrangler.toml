@@ -2,9 +2,11 @@ name = "netravax-site"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-07-01"
 
-# Cloudflare Email Service binding used by functions/api/contact.js to send
-# enquiry notifications directly -- no third-party email API or webhook.
-# Requires the "from" domain (netravax.shubodaya.dev) to be onboarded to
-# Email Sending first: npx wrangler email sending enable netravax.shubodaya.dev
-[[send_email]]
-name = "EMAIL"
+# functions/api/contact.js expects an env.EMAIL "Send Email" binding
+# (Cloudflare Email Service) to deliver enquiries. Pages projects don't
+# support declaring send_email in this config file (wrangler rejects it at
+# deploy time: "Configuration file for Pages projects does not support
+# send_email") -- it has to be added via the Dashboard instead:
+# Pages project > Settings > Functions > Bindings > Send Email binding,
+# name it EMAIL. The "from" domain (netravax.shubodaya.dev) also needs to
+# be onboarded to Email Sending first, separately from the binding.
