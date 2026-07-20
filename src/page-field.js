@@ -115,12 +115,31 @@ export function setupPageField({ reducedMotion, isCoarsePointer }) {
   });
   field.add(nodeMesh);
 
+  let raf = 0;
+  let running = true;
+
+  // Combines both pause conditions (tab hidden, viewport narrower than the
+  // CSS breakpoint that sets #pageField to display:none) so the resize and
+  // visibilitychange handlers below can't fight each other into resuming
+  // the RAF loop while the other condition still says it should stay off.
+  function shouldRun() {
+    return !document.hidden && window.innerWidth >= 640;
+  }
+
   function resize() {
     const ratio = Math.min(window.devicePixelRatio || 1, compact ? 1.25 : 1.75);
     renderer.setPixelRatio(ratio);
     renderer.setSize(window.innerWidth, window.innerHeight, false);
     camera.aspect = window.innerWidth / Math.max(1, window.innerHeight);
     camera.updateProjectionMatrix();
+
+    if (!shouldRun() && running) {
+      running = false;
+      cancelAnimationFrame(raf);
+    } else if (shouldRun() && !running && !reducedMotion.matches) {
+      running = true;
+      raf = requestAnimationFrame(frame);
+    }
   }
 
   const state = { scrollT: 0 };
@@ -135,9 +154,6 @@ export function setupPageField({ reducedMotion, isCoarsePointer }) {
     });
     return true;
   }
-
-  let raf = 0;
-  let running = true;
 
   function frame(time) {
     if (!running) return;
@@ -155,10 +171,10 @@ export function setupPageField({ reducedMotion, isCoarsePointer }) {
   window.addEventListener("resize", resize);
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden && running) {
+    if (!shouldRun() && running) {
       running = false;
       cancelAnimationFrame(raf);
-    } else if (!document.hidden && !running) {
+    } else if (shouldRun() && !running) {
       running = true;
       raf = requestAnimationFrame(frame);
     }

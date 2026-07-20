@@ -341,30 +341,34 @@ export function setupHeroNetwork({ reducedMotion, isCoarsePointer }) {
   raf = requestAnimationFrame(frame);
   window.addEventListener("resize", resize);
 
+  // Both the hero's scroll-visibility and the tab's visibility can pause
+  // the loop independently -- tracked separately so neither listener
+  // resumes rendering while the other condition still says it should stay
+  // off (e.g. tab re-foregrounded while the hero is still scrolled out of
+  // view).
+  let heroVisible = true;
+
+  function syncRunning() {
+    const should = heroVisible && !document.hidden;
+    if (should && !running) {
+      running = true;
+      raf = requestAnimationFrame(frame);
+    } else if (!should && running) {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
-      const isIntersecting = entries[0]?.isIntersecting;
-      if (isIntersecting && !running) {
-        running = true;
-        raf = requestAnimationFrame(frame);
-      } else if (!isIntersecting && running) {
-        running = false;
-        cancelAnimationFrame(raf);
-      }
+      heroVisible = Boolean(entries[0]?.isIntersecting);
+      syncRunning();
     },
     { threshold: 0 }
   );
   observer.observe(hero);
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden && running) {
-      running = false;
-      cancelAnimationFrame(raf);
-    } else if (!document.hidden && !running) {
-      running = true;
-      raf = requestAnimationFrame(frame);
-    }
-  });
+  document.addEventListener("visibilitychange", syncRunning);
 
   return { setScrollT: (t) => { state.scrollT = t; } };
 }
