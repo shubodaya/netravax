@@ -1314,11 +1314,45 @@ textarea[aria-invalid="true"] {
   gap: 20px;
 }
 
-.admin-main h1 {
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
+/* Admin console layout -- mirrors network.shubodaya.dev's admin portal
+   structure (header with owner-console eyebrow, a sidebar listing
+   editable sections, a top action bar, single content panel that swaps
+   per section) using this site's own tokens rather than importing that
+   site's colour scheme. */
+.admin-header {
+  min-height: var(--header);
+  max-width: calc(var(--max) + 48px);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.admin-header-brand h1 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Only relevant once the sidebar becomes an off-canvas drawer below 640px
+   (see the media query further down) -- stays hidden above that width
+   regardless of whether JS has cleared the `hidden` attribute, since the
+   sidebar is always visible there and the toggle would be a dead button. */
+#sectionsToggle {
+  display: none;
 }
 
 .admin-status {
+  max-width: calc(var(--max) + 48px);
+  margin: 0 auto;
+  padding: 0 24px;
   min-height: 1.4em;
   color: var(--muted);
 }
@@ -1327,14 +1361,18 @@ textarea[aria-invalid="true"] {
   color: var(--danger);
 }
 
-.admin-panel {
-  display: grid;
-  gap: 12px;
+.admin-auth-panel {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 0 24px;
 }
 
 .admin-form {
   display: grid;
   gap: 14px;
+}
+
+.admin-form--inline {
   max-width: 420px;
 }
 
@@ -1347,18 +1385,99 @@ textarea[aria-invalid="true"] {
   color: var(--danger);
 }
 
-.admin-categories {
+.admin-dashboard {
+  max-width: calc(var(--max) + 48px);
+  margin: 0 auto;
+  padding: 24px 24px 100px;
   display: grid;
-  gap: 24px;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
 }
 
-.admin-category {
+.admin-sidebar {
+  position: sticky;
+  top: 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 20px;
+  padding: 16px;
+  background: rgba(12, 26, 22, 0.5);
+}
+
+.admin-sidebar-label {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-section-nav {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-section-nav-item {
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  padding: 0.6rem 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-section-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.admin-section-nav-item.is-active {
+  border-color: var(--line-strong);
+  background: rgba(116, 238, 185, 0.1);
+  color: var(--text);
+}
+
+.admin-section-nav-item--action {
+  color: var(--accent);
+}
+
+.admin-content {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 18px;
+  background: rgba(12, 26, 22, 0.5);
+}
+
+.admin-topbar-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-signed-in {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.admin-panel-body {
   display: grid;
   gap: 16px;
-  background: rgba(12, 26, 22, 0.5);
 }
 
 .admin-category-head {
@@ -1393,15 +1512,63 @@ textarea[aria-invalid="true"] {
   padding: 0;
 }
 
-.admin-actions {
+.admin-rearrange-list {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-rearrange-row {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: rgba(7, 17, 15, 0.6);
+}
+
+.admin-rearrange-meta {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.admin-rearrange-buttons {
+  display: flex;
+  gap: 8px;
 }
 
 @media (max-width: 640px) {
   .admin-category-head {
     grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    inset: var(--header) 0 0 auto;
+    z-index: 50;
+    width: min(280px, 80vw);
+    height: calc(100dvh - var(--header));
+    overflow-y: auto;
+    border-radius: 0;
+    background: rgba(7, 17, 15, 0.98);
+    box-shadow: var(--shadow);
+    transform: translateX(100%);
+    transition: transform 200ms ease;
+  }
+
+  .admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  #sectionsToggle {
+    display: inline-flex !important;
   }
 }
 
