@@ -394,7 +394,7 @@
         </div>
       </section>
 
-      <section class="work section-shell" id="work" aria-labelledby="work-title">
+      <section class="work section-shell" id="work" aria-labelledby="work-title" data-category-id="selected-work">
         <div class="section-heading">
           <p class="eyebrow">Selected work</p>
           <h2 id="work-title">Technical tools, built and deployed.</h2>
@@ -759,5 +759,9 @@
 
     <a class="admin-stealth-entry" href="/admin.html" aria-label="Owner admin login" title="Owner login">A</a>
     <script type="module" src="/src/main.js"></script>
+    <script type="module">
+      import { renderPageContent } from "/src/content-render.js";
+      renderPageContent("home");
+    </script>
   </body>
 </html>

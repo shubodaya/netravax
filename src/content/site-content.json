@@ -1,6 +1,16 @@
 {
   "categories": [
     {
+      "id": "selected-work",
+      "page": "home",
+      "title": "Selected work",
+      "cards": [
+        { "title": "NetConfigPro", "description": "Multi-vendor CLI config generator for Cisco, Fortinet and SonicWall, with built-in risk warnings.", "image": "/images/work-netconfigpro.jpg", "url": "https://shubodaya.github.io/NetConfigPro/", "linkLabel": "Open tool" },
+        { "title": "NetSentry", "description": "Incident triage that parses firewall, VPN, DNS, DHCP and IDS/IPS logs for rapid root-cause analysis.", "image": "/images/work-netsentry.jpg", "url": "https://shubodaya.github.io/netsentry/", "linkLabel": "Open tool" },
+        { "title": "Full project catalog", "description": "28 projects and portfolio systems across networking, security, SaaS and research.", "image": "/images/work-catalog.jpg", "url": "https://shubodaya.dev/projects", "linkLabel": "Browse projects" }
+      ]
+    },
+    {
       "id": "network-security",
       "page": "work",
       "title": "Network & security tooling",
