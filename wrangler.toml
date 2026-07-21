@@ -1,0 +1,9 @@
+name = "netravax-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-07-20"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "netravax-site-db"
+database_id = "b2f7c92b-760f-4aaf-8b71-c0355f4e1a8e"

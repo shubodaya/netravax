@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin | Netravax Technologies</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body class="policy-page admin-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="policy-header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="/android-chrome-192x192.png" alt="" width="64" height="64" />
+        </span>
+        <span class="brand-copy"><strong>Netravax Technologies</strong><span>Admin</span></span>
+      </a>
+      <button class="button button-secondary" type="button" id="logoutButton" hidden>Log out</button>
+    </header>
+    <main id="main" class="admin-main">
+      <div id="adminStatus" class="admin-status" role="status" aria-live="polite"></div>
+
+      <section id="setupSection" class="admin-panel" hidden>
+        <p class="eyebrow">First-time setup</p>
+        <h1>Create the owner account</h1>
+        <p>This runs once. Once an owner account exists, this form disables itself.</p>
+        <form id="setupForm" class="admin-form" novalidate>
+          <label>Email<input type="email" name="email" autocomplete="username" required /></label>
+          <label>Password<input type="password" name="password" autocomplete="new-password" required /></label>
+          <label>Confirm password<input type="password" name="confirmPassword" autocomplete="new-password" required /></label>
+          <p class="admin-hint">At least 12 characters, with an uppercase letter, lowercase letter, number and symbol.</p>
+          <button class="button button-primary" type="submit">Create account</button>
+        </form>
+      </section>
+
+      <section id="loginSection" class="admin-panel" hidden>
+        <p class="eyebrow">Owner login</p>
+        <h1>Sign in</h1>
+        <form id="loginForm" class="admin-form" novalidate>
+          <label>Email<input type="email" name="email" autocomplete="username" required /></label>
+          <label>Password<input type="password" name="password" autocomplete="current-password" required /></label>
+          <button class="button button-primary" type="submit">Sign in</button>
+        </form>
+      </section>
+
+      <section id="editorSection" class="admin-panel" hidden>
+        <p class="eyebrow">Content</p>
+        <h1>Edit site content</h1>
+        <p>Changes save to the live site immediately, and are mirrored to GitHub in the background.</p>
+        <div id="categoryList" class="admin-categories"></div>
+        <div class="admin-actions">
+          <button class="button button-secondary" type="button" id="addCategoryButton">Add category</button>
+          <button class="button button-primary" type="button" id="saveButton">Save changes</button>
+        </div>
+        <p id="saveStatus" class="admin-hint" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script type="module" src="/src/admin.js"></script>
+  </body>
+</html>

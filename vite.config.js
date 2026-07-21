@@ -9,7 +9,9 @@ export default defineConfig({
         privacy: resolve(__dirname, "privacy.html"),
         terms: resolve(__dirname, "terms.html"),
         security: resolve(__dirname, "security.html"),
-        work: resolve(__dirname, "work.html")
+        work: resolve(__dirname, "work.html"),
+        cloudAutomation: resolve(__dirname, "cloud-automation.html"),
+        admin: resolve(__dirname, "admin.html")
       }
     }
   }

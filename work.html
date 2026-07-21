@@ -57,7 +57,7 @@
         </p>
       </div>
 
-      <section class="work-category" aria-labelledby="cat-network">
+      <section class="work-category" aria-labelledby="cat-network" data-category-id="network-security">
         <h2 id="cat-network">Network &amp; security tooling</h2>
         <div class="work-grid">
           <a class="work-card" href="https://app.netravax.shubodaya.dev/" target="_blank" rel="noopener">
@@ -71,10 +71,26 @@
               <span class="work-card-link">View live ↗</span>
             </div>
           </a>
+          <a class="work-card" href="https://shubodaya.github.io/NetConfigPro/" target="_blank" rel="noopener">
+            <img src="/images/work-netconfigpro.jpg" alt="" loading="lazy" width="1200" height="750" />
+            <div class="work-card-body">
+              <h3>NetConfigPro</h3>
+              <p>Multi-vendor CLI config generator for Cisco, Fortinet and SonicWall, with built-in risk warnings.</p>
+              <span class="work-card-link">Open tool ↗</span>
+            </div>
+          </a>
+          <a class="work-card" href="https://shubodaya.github.io/netsentry/" target="_blank" rel="noopener">
+            <img src="/images/work-netsentry.jpg" alt="" loading="lazy" width="1200" height="750" />
+            <div class="work-card-body">
+              <h3>NetSentry</h3>
+              <p>Incident triage that parses firewall, VPN, DNS, DHCP and IDS/IPS logs for rapid root-cause analysis.</p>
+              <span class="work-card-link">Open tool ↗</span>
+            </div>
+          </a>
         </div>
       </section>
 
-      <section class="work-category" aria-labelledby="cat-saas">
+      <section class="work-category" aria-labelledby="cat-saas" data-category-id="saas-platforms">
         <h2 id="cat-saas">Business &amp; SaaS platforms</h2>
         <div class="work-grid">
           <a class="work-card" href="https://ordercircuit.shubodaya.dev/" target="_blank" rel="noopener">
@@ -128,7 +144,7 @@
         </div>
       </section>
 
-      <section class="work-category" aria-labelledby="cat-interactive">
+      <section class="work-category" aria-labelledby="cat-interactive" data-category-id="ai-games-interactive">
         <h2 id="cat-interactive">AI, games &amp; interactive 3D</h2>
         <div class="work-grid">
           <a class="work-card" href="https://aifriendbot.pages.dev/" target="_blank" rel="noopener">
@@ -163,5 +179,10 @@
         <a class="button button-primary" href="/#contact">Start a project</a>
       </div>
     </main>
+    <a class="admin-stealth-entry" href="/admin.html" aria-label="Owner admin login" title="Owner login">A</a>
+    <script type="module">
+      import { renderPageContent } from "/src/content-render.js";
+      renderPageContent("work");
+    </script>
   </body>
 </html>
