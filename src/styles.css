@@ -48,6 +48,17 @@
   box-sizing: border-box;
 }
 
+/* The [hidden] attribute is meant to always win, but any class rule that
+   sets its own `display` (e.g. .button's inline-flex, .admin-dashboard's
+   grid) has equal specificity to [hidden] and comes from the same author
+   origin, so source order -- not intent -- decides which wins. Forcing it
+   here keeps `el.hidden = true` reliable everywhere without having to
+   remember to out-specificity every current and future display-setting
+   class individually. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header) + 24px);
